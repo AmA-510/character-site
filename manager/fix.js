@@ -238,3 +238,46 @@ document.querySelector('#add-story').addEventListener('click', () => {
 const originalDraw = draw
 draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderStories() }
 renderTrash()
+
+// Turn the long studio into focused work tabs and keep saving in reach.
+storiesSection.after(trashSection)
+
+const studioStyle = document.createElement('style')
+studioStyle.textContent = '.studio-tabs{position:sticky;top:0;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:12px 0;background:#22212a;border-bottom:1px solid #565260}.studio-tab{flex:0 0 auto;margin:0;padding:8px 11px;background:transparent;color:#aaa7a0;border:1px solid transparent;font-size:13px}.studio-tab.active{color:#ea497e;border-color:#ea497e;background:#292834}.studio-panel-hidden{display:none}.studio-save-bar{position:fixed;z-index:30;left:50%;bottom:18px;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);padding:9px 12px;background:#292834;border:1px solid #565260;box-shadow:0 12px 30px rgba(0,0,0,.32);transform:translateX(-50%)}.studio-save-bar button{margin:0}.studio-save-bar span{font-size:12px}@media(max-width:600px){.studio-save-bar{bottom:12px;width:calc(100% - 28px);justify-content:space-between}.studio-save-bar button{font-size:13px}}'
+document.head.append(studioStyle)
+
+const panels = [
+  { label: '기본 정보', element: document.querySelector('#title').closest('section') },
+  { label: '캐릭터', element: document.querySelector('#profiles').closest('section') },
+  { label: '갤러리', element: document.querySelector('#gallery').closest('section') },
+  { label: '세계관', element: document.querySelector('#entries').closest('section') },
+  { label: '이야기', element: storiesSection },
+  { label: '휴지통', element: trashSection },
+]
+
+const studioTabs = document.createElement('nav')
+studioTabs.className = 'studio-tabs'
+panels[0].element.before(studioTabs)
+
+function activateStudioTab(index) {
+  panels.forEach((panel, panelIndex) => {
+    panel.element.classList.toggle('studio-panel-hidden', panelIndex !== index)
+    studioTabs.children[panelIndex].classList.toggle('active', panelIndex === index)
+  })
+}
+
+panels.forEach((panel, index) => {
+  panel.element.classList.add('studio-panel')
+  const tab = document.createElement('button')
+  tab.type = 'button'
+  tab.className = 'studio-tab'
+  tab.textContent = panel.label
+  tab.addEventListener('click', () => activateStudioTab(index))
+  studioTabs.append(tab)
+})
+activateStudioTab(0)
+
+const studioSaveBar = document.createElement('div')
+studioSaveBar.className = 'studio-save-bar'
+studioSaveBar.append(originalSaveButton, document.querySelector('#notice'))
+document.body.append(studioSaveBar)
