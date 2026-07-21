@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap');
 
-:root { --bg: #22212a; --text: #d8d5c6; --muted: #aaa7a0; --accent: #b9a9d9; --surface: #292834; --line: #3b3948; --line-strong: #565260; --sans: "Gowun Dodum", Inter, Pretendard, "Noto Sans KR", Arial, sans-serif; --serif: "Gowun Batang", "Noto Serif KR", serif; --mono: "SFMono-Regular", Consolas, monospace; font-family: var(--sans); color: var(--text); background: var(--bg); font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+:root { --bg: #22212a; --text: #d8d5c6; --muted: #aaa7a0; --accent: #b9a9d9; --surface: #292834; --line: #3b3948; --line-strong: #565260; --sans: "Gowun Dodum", Inter, Pretendard, "Noto Sans KR", Arial, sans-serif; --serif: "IBM Plex Sans KR", "Noto Sans KR", sans-serif; --mono: "SFMono-Regular", Consolas, monospace; font-family: var(--sans); color: var(--text); background: var(--bg); font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 * { box-sizing: border-box; } html { scroll-behavior: smooth; } body { margin: 0; min-width: 320px; background: var(--bg); } button { font: inherit; }
