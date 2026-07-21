@@ -17,7 +17,7 @@ siteImageStyle.textContent = '.site-image-preview-list{display:flex;flex-wrap:wr
 document.head.append(siteImageStyle)
 
 const siteLinksStyle = document.createElement('style')
-siteLinksStyle.textContent = '.gallery-card-summary{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:6px 0;background:transparent;color:#d8d5c6;text-align:left}.gallery-card-summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gallery-card-summary b{color:#ea497e;font-size:13px;font-weight:400;white-space:nowrap}.gallery-card-collapsed{padding:10px 14px}.gallery-card-collapsed>:not(.gallery-card-summary){display:none}.entry-editor-card-hidden{display:none}.entry-editor-pager{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}.entry-editor-pager button{margin:0;padding:7px 11px;background:#292834;color:#d8d5c6;border:1px solid #565260}.entry-editor-pager button.active{color:#ea497e;border-color:#ea497e}.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr 130px auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-logo{display:flex;gap:6px;align-items:center;font-size:11px}.site-link-logo input{max-width:90px}.site-link-logo img{width:30px;height:30px;object-fit:contain;background:#22212a}.site-link-controls{display:flex;gap:4px}.site-link-controls button{margin:0;padding:7px 9px}.site-link-card .site-link-remove{background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-controls{display:grid;grid-template-columns:1fr 1fr 1fr}.site-link-card .site-link-remove{width:100%}}'
+siteLinksStyle.textContent = '.gallery-card-summary{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:6px 0;background:transparent;color:#d8d5c6;text-align:left}.gallery-card-summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gallery-card-summary b{color:#ea497e;font-size:13px;font-weight:400;white-space:nowrap}.gallery-order-controls{display:flex;gap:5px;margin-bottom:4px}.gallery-order-controls button{margin:0;padding:5px 9px;background:#292834;color:#d8d5c6;border:1px solid #565260}.gallery-card-collapsed{padding:10px 14px}.gallery-card-collapsed>:not(.gallery-card-summary):not(.gallery-order-controls){display:none}.entry-editor-card-hidden,.gallery-editor-card-hidden{display:none}.entry-editor-pager,.gallery-editor-pager{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}.entry-editor-pager button,.gallery-editor-pager button{margin:0;padding:7px 11px;background:#292834;color:#d8d5c6;border:1px solid #565260}.entry-editor-pager button.active,.gallery-editor-pager button.active{color:#ea497e;border-color:#ea497e}.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr 130px auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-logo{display:flex;gap:6px;align-items:center;font-size:11px}.site-link-logo input{max-width:90px}.site-link-logo img{width:30px;height:30px;object-fit:contain;background:#22212a}.site-link-controls{display:flex;gap:4px}.site-link-controls button{margin:0;padding:7px 9px}.site-link-card .site-link-remove{background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-controls{display:grid;grid-template-columns:1fr 1fr 1fr}.site-link-card .site-link-remove{width:100%}}'
 document.head.append(siteLinksStyle)
 
 const escapeLinkText = (value = '') => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -336,6 +336,10 @@ function renderGalleryCardCollapses() {
   document.querySelectorAll('.card[data-type="gallery"]').forEach((card) => {
     if (card.querySelector('.gallery-card-summary')) return
     const item = d.gallery[Number(card.dataset.i)]
+    const orderControls = document.createElement('div')
+    orderControls.className = 'gallery-order-controls'
+    const index = Number(card.dataset.i)
+    orderControls.innerHTML = `<button type="button" data-move-gallery="${index}" data-direction="-1" ${index === 0 ? 'disabled' : ''}>↑ 위로</button><button type="button" data-move-gallery="${index}" data-direction="1" ${index === d.gallery.length - 1 ? 'disabled' : ''}>↓ 아래로</button>`
     const summary = document.createElement('button')
     summary.type = 'button'
     summary.className = 'gallery-card-summary'
@@ -345,9 +349,54 @@ function renderGalleryCardCollapses() {
       summary.querySelector('b').textContent = isCollapsed ? '수정 펼치기 ↓' : '수정 접기 ↑'
     })
     card.prepend(summary)
+    card.prepend(orderControls)
     card.classList.add('gallery-card-collapsed')
   })
 }
+
+function collectGalleryCards() {
+  document.querySelectorAll('.card[data-type="gallery"]').forEach((card) => {
+    const item = d.gallery[Number(card.dataset.i)]
+    card.querySelectorAll('[data-k]').forEach((field) => { item[field.dataset.k] = field.value })
+    item.tags = String(item.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean)
+  })
+}
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-move-gallery]')
+  if (!button) return
+  collectGalleryCards()
+  const index = Number(button.dataset.moveGallery)
+  const nextIndex = index + Number(button.dataset.direction)
+  if (nextIndex < 0 || nextIndex >= d.gallery.length) return
+  ;[d.gallery[index], d.gallery[nextIndex]] = [d.gallery[nextIndex], d.gallery[index]]
+  draw()
+})
+
+let galleryEditorPage = 0
+function renderGalleryPagination() {
+  if (!d) return
+  const cards = [...document.querySelectorAll('.card[data-type="gallery"]')]
+  const pageSize = 10
+  const pageCount = Math.max(1, Math.ceil(cards.length / pageSize))
+  galleryEditorPage = Math.min(galleryEditorPage, pageCount - 1)
+  cards.forEach((card, index) => card.classList.toggle('gallery-editor-card-hidden', Math.floor(index / pageSize) !== galleryEditorPage))
+  let pager = document.querySelector('#gallery-editor-pager')
+  if (!pager) {
+    pager = document.createElement('nav')
+    pager.id = 'gallery-editor-pager'
+    pager.className = 'gallery-editor-pager'
+    document.querySelector('#gallery').before(pager)
+  }
+  pager.innerHTML = Array.from({ length: pageCount }, (_, index) => `<button type="button" class="${index === galleryEditorPage ? 'active' : ''}" data-gallery-editor-page="${index}">${index + 1}</button>`).join('')
+}
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-gallery-editor-page]')
+  if (!button) return
+  galleryEditorPage = Number(button.dataset.galleryEditorPage)
+  renderGalleryPagination()
+})
 
 let entryEditorPage = 0
 function renderEntryPagination() {
@@ -409,7 +458,7 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderEntryExtras(); renderEntryPagination(); renderStories() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderGalleryPagination(); renderEntryExtras(); renderEntryPagination(); renderStories() }
 renderTrash()
 
 // Turn the long studio into focused work tabs and keep saving in reach.

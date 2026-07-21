@@ -20,7 +20,7 @@
       "/content-images/1784634394392-------1.png",
       "/content-images/1784634556569-------2.png",
       "/content-images/1784635112276-------3.png",
-      "/content-images/1784635112282-------4.png"
+      "/content-images/1784651227921-------6.png"
     ],
     "links": [
       {
@@ -88,6 +88,22 @@
   ],
   "gallery": [
     {
+      "url": "/content-images/1784651584938-162.jpg",
+      "title": "마리",
+      "story": "",
+      "tags": [
+        "마리"
+      ]
+    },
+    {
+      "url": "/content-images/1784651599929-163.jpg",
+      "title": "텟쨩",
+      "story": "",
+      "tags": [
+        "텟쨩"
+      ]
+    },
+    {
       "url": "/content-images/1784616406473-134.jpg",
       "title": "종말",
       "story": "내용 수정중.",
@@ -104,16 +120,46 @@
       ]
     },
     {
+      "url": "/content-images/1784651430691-138.jpg",
+      "title": "모조",
+      "story": "",
+      "tags": [
+        "마리"
+      ]
+    },
+    {
       "url": "/content-images/1784644264858-142.jpg",
       "title": "R.E.P.O",
       "story": "",
-      "tags": []
+      "tags": [
+        "마리",
+        "텟쨩"
+      ]
+    },
+    {
+      "url": "/content-images/1784651533471-153.jpg",
+      "title": "오류",
+      "story": "",
+      "tags": [
+        "텟쨩"
+      ]
+    },
+    {
+      "url": "/content-images/1784651367738-160.jpg",
+      "title": "불청객",
+      "story": "",
+      "tags": [
+        "마리",
+        "텟쨩"
+      ]
     },
     {
       "url": "/content-images/1784644646951-166.jpg",
       "title": "백룸",
       "story": "",
-      "tags": []
+      "tags": [
+        "마리"
+      ]
     }
   ],
   "entries": [
