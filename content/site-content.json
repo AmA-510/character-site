@@ -22,7 +22,43 @@
       "/content-images/1784635112276-------3.png",
       "/content-images/1784635112282-------4.png"
     ],
-    "links": []
+    "links": [
+      {
+        "id": "e2b1a10a-cfe7-47b9-8608-83b2adc1c90c",
+        "label": "X",
+        "url": "https://x.com/akirama1417491",
+        "description": "",
+        "logoImage": "/content-images/1784642479100-X.png"
+      },
+      {
+        "id": "c35881fe-dfd6-4ff3-ad62-56297a23953a",
+        "label": "Pixiv",
+        "url": "https://www.pixiv.net/users/107824468",
+        "description": "",
+        "logoImage": "/content-images/1784642134387----------.png"
+      },
+      {
+        "id": "473bcc11-7b6e-4302-89dc-ee7a57fe8d91",
+        "label": "인스타",
+        "url": "https://www.instagram.com/akirama510/",
+        "description": "",
+        "logoImage": "/content-images/1784642518621----------.png"
+      },
+      {
+        "id": "3e5b06f1-5797-40e2-9323-d0e0e4e5a32b",
+        "label": "커미션",
+        "url": "https://discord.gg/rZj2P9CdCd",
+        "description": "",
+        "logoImage": "/content-images/1784642740431----------.png"
+      },
+      {
+        "id": "fe0af31d-9515-420a-97a5-fafbff3fd777",
+        "label": "숄더픽",
+        "url": "https://pick.shoulder.fan/@a971cebc-736b-4b11-a334-4418bceec2e0",
+        "description": "",
+        "logoImage": "/content-images/1784642789397----------.png"
+      }
+    ]
   },
   "profiles": [
     {
@@ -109,6 +145,13 @@
       "id": "a680837a-c364-4978-821f-36e33488ce33",
       "type": "배경",
       "title": "기본 설정",
+      "text": "추가 예정입니다.",
+      "links": ""
+    },
+    {
+      "id": "741989ea-7710-4776-bcbe-68fe63a3a3e8",
+      "type": "테스트탭",
+      "title": "테스트입니다.",
       "text": "추가 예정입니다.",
       "links": ""
     }

@@ -17,10 +17,13 @@ siteImageStyle.textContent = '.site-image-preview-list{display:flex;flex-wrap:wr
 document.head.append(siteImageStyle)
 
 const siteLinksStyle = document.createElement('style')
-siteLinksStyle.textContent = '.gallery-card-summary{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:6px 0;background:transparent;color:#d8d5c6;text-align:left}.gallery-card-summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gallery-card-summary b{color:#ea497e;font-size:13px;font-weight:400;white-space:nowrap}.gallery-card-collapsed{padding:10px 14px}.gallery-card-collapsed>:not(.gallery-card-summary){display:none}.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr 130px auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-logo{display:flex;gap:6px;align-items:center;font-size:11px}.site-link-logo input{max-width:90px}.site-link-logo img{width:30px;height:30px;object-fit:contain;background:#22212a}.site-link-controls{display:flex;gap:4px}.site-link-controls button{margin:0;padding:7px 9px}.site-link-card .site-link-remove{background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-controls{display:grid;grid-template-columns:1fr 1fr 1fr}.site-link-card .site-link-remove{width:100%}}'
+siteLinksStyle.textContent = '.gallery-card-summary{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:6px 0;background:transparent;color:#d8d5c6;text-align:left}.gallery-card-summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gallery-card-summary b{color:#ea497e;font-size:13px;font-weight:400;white-space:nowrap}.gallery-card-collapsed{padding:10px 14px}.gallery-card-collapsed>:not(.gallery-card-summary){display:none}.entry-editor-card-hidden{display:none}.entry-editor-pager{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}.entry-editor-pager button{margin:0;padding:7px 11px;background:#292834;color:#d8d5c6;border:1px solid #565260}.entry-editor-pager button.active{color:#ea497e;border-color:#ea497e}.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr 130px auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-logo{display:flex;gap:6px;align-items:center;font-size:11px}.site-link-logo input{max-width:90px}.site-link-logo img{width:30px;height:30px;object-fit:contain;background:#22212a}.site-link-controls{display:flex;gap:4px}.site-link-controls button{margin:0;padding:7px 9px}.site-link-card .site-link-remove{background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-controls{display:grid;grid-template-columns:1fr 1fr 1fr}.site-link-card .site-link-remove{width:100%}}'
 document.head.append(siteLinksStyle)
 
 const escapeLinkText = (value = '') => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+let siteLinksDirty = false
+document.querySelector('#site-links-list').addEventListener('input', () => { siteLinksDirty = true })
+document.querySelector('#site-links-list').addEventListener('change', () => { siteLinksDirty = true })
 
 function collectSiteLinks() {
   if (!d) return
@@ -44,6 +47,7 @@ function renderSiteLinks() {
 }
 
 document.querySelector('#add-site-link').addEventListener('click', () => {
+  siteLinksDirty = true
   collectSiteLinks()
   d.site.links.push({ id: crypto.randomUUID(), label: '', url: '', description: '' })
   renderSiteLinks()
@@ -66,6 +70,7 @@ async function saveSiteLinkLogos() {
 document.addEventListener('click', (event) => {
   const button = event.target.closest('[data-remove-site-link]')
   if (!button) return
+  siteLinksDirty = true
   collectSiteLinks()
   d.site.links.splice(Number(button.dataset.removeSiteLink), 1)
   renderSiteLinks()
@@ -74,6 +79,7 @@ document.addEventListener('click', (event) => {
 document.addEventListener('click', (event) => {
   const button = event.target.closest('[data-move-site-link]')
   if (!button) return
+  siteLinksDirty = true
   collectSiteLinks()
   const index = Number(button.dataset.moveSiteLink)
   const nextIndex = index + Number(button.dataset.direction)
@@ -196,11 +202,20 @@ originalSaveButton?.addEventListener('click', async (event) => {
   d.site.title = $('title').value
   d.site.titleLines = $('title-lines').value.split('\n').filter(Boolean)
   d.site.heroLines = $('hero').value.split('\n').filter(Boolean)
-  collectSiteLinks()
-  await saveSiteLinkLogos()
+  let savedLinks = d.site.links || []
+  try {
+    const latest = await fetch('/api/content')
+    if (latest.ok) savedLinks = (await latest.json()).site.links || []
+  } catch {}
+  if (siteLinksDirty) {
+    collectSiteLinks()
+    await saveSiteLinkLogos()
+  } else {
+    d.site.links = savedLinks
+  }
   const response = await fetch('/api/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
   say(response.ok ? '저장됐습니다. 캐릭터사이트를 새로고침하세요.' : '저장에 실패했습니다.')
-  if (response.ok) draw()
+  if (response.ok) { siteLinksDirty = false; draw() }
 }, true)
 
 const overlay = document.createElement('div')
@@ -308,6 +323,31 @@ function renderGalleryCardCollapses() {
   })
 }
 
+let entryEditorPage = 0
+function renderEntryPagination() {
+  if (!d) return
+  const cards = [...document.querySelectorAll('.card[data-type="entries"]')]
+  const pageSize = 5
+  const pageCount = Math.max(1, Math.ceil(cards.length / pageSize))
+  entryEditorPage = Math.min(entryEditorPage, pageCount - 1)
+  cards.forEach((card, index) => card.classList.toggle('entry-editor-card-hidden', Math.floor(index / pageSize) !== entryEditorPage))
+  let pager = document.querySelector('#entry-editor-pager')
+  if (!pager) {
+    pager = document.createElement('nav')
+    pager.id = 'entry-editor-pager'
+    pager.className = 'entry-editor-pager'
+    document.querySelector('#entries').before(pager)
+  }
+  pager.innerHTML = Array.from({ length: pageCount }, (_, index) => `<button type="button" class="${index === entryEditorPage ? 'active' : ''}" data-entry-editor-page="${index}">${index + 1}</button>`).join('')
+}
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-entry-editor-page]')
+  if (!button) return
+  entryEditorPage = Number(button.dataset.entryEditorPage)
+  renderEntryPagination()
+})
+
 const storiesSection = document.createElement('section')
 storiesSection.innerHTML = '<h2>이야기</h2><p class="muted">짧은 소설, 독백, 기록을 추가할 수 있습니다.</p><button type="button" id="add-story">이야기 추가</button><div id="stories-list"></div>'
 document.querySelector('.w').append(storiesSection)
@@ -327,7 +367,7 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderStories() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderEntryPagination(); renderStories() }
 renderTrash()
 
 // Turn the long studio into focused work tabs and keep saving in reach.
