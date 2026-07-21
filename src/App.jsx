@@ -11,7 +11,7 @@ const publicUrl = (url) => url?.startsWith('/') ? `${import.meta.env.BASE_URL}${
 
 function SiteTitle({ lines }) { return <>{lines.map((line, index) => { const [before, ...after] = line.split('종말'); return <span key={index}>{before}{after.map((part, partIndex) => <span key={partIndex}><span className="title-accent">종말</span>{part}</span>)}{index < lines.length - 1 && <br/>}</span> })}</> }
 
-function Header() { const headerLines = data.site.titleLines?.filter(Boolean) || [data.site.title]; return <header className="site-header"><a className="wordmark" href="#/"><SiteTitle lines={headerLines}/></a><nav><a href="#/">메인</a><a href="#/profiles">캐릭터</a><a href="#/gallery">갤러리</a><a href="#/archive">도감</a></nav></header> }
+function Header() { const headerLines = data.site.titleLines?.filter(Boolean) || [data.site.title]; const current = route(); const active = (page) => page === 'home' ? current === 'home' : current === page || current.startsWith(`${page}/`); return <header className="site-header"><a className="wordmark" href="#/"><SiteTitle lines={headerLines}/></a><nav><a className={active('home') ? 'active' : ''} href="#/">메인</a><a className={active('profiles') ? 'active' : ''} href="#/profiles">캐릭터</a><a className={active('gallery') ? 'active' : ''} href="#/gallery">갤러리</a><a className={active('archive') ? 'active' : ''} href="#/archive">도감</a></nav></header> }
 function Back({ to = '#/' }) { return <a className="back-link" href={to}>← 돌아가기</a> }
 function Empty({ children }) { return <div className="empty-page">{children}</div> }
 
