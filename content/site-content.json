@@ -5,8 +5,8 @@
     "ownerLink": "https://x.com/akirama1417491",
     "heroEyebrow": "ARCHIVE / 001",
     "heroLines": [
-      "아직 쓰이지 않은 이야기의 첫 장입니다.",
-      "이곳에 여행의 기록과 세계의 단서가 차례로 쌓입니다."
+      "히치하이커,마리와 테세우스의 배,텟쨩을 중심으로 벌어지는",
+      "도시전설,이매망량 또는 미스테리한 이야기들을 만들어갑니다."
     ],
     "profileIntro": "여행 중 만나는 인물의 기록을 모으는 페이지입니다.",
     "galleryIntro": "여행의 순간과 캐릭터의 모습을 모아두는 시각 기록입니다.",
@@ -48,14 +48,14 @@
         "id": "3e5b06f1-5797-40e2-9323-d0e0e4e5a32b",
         "label": "커미션",
         "url": "https://discord.gg/rZj2P9CdCd",
-        "description": "",
+        "description": "디스코드",
         "logoImage": "/content-images/1784642740431----------.png"
       },
       {
         "id": "fe0af31d-9515-420a-97a5-fafbff3fd777",
         "label": "숄더픽",
         "url": "https://pick.shoulder.fan/@a971cebc-736b-4b11-a334-4418bceec2e0",
-        "description": "",
+        "description": "숄더픽",
         "logoImage": "/content-images/1784642789397----------.png"
       }
     ]
