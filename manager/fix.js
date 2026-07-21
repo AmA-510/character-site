@@ -102,6 +102,15 @@ originalSaveButton?.addEventListener('click', async (event) => {
       if (!response.ok) return say(uploaded.error || '이미지 업로드에 실패했습니다.')
       item.image = uploaded.url
     }
+    const logoFile = card.querySelector('.profile-logo-file')?.files[0]
+    if (logoFile) {
+      const form = new FormData()
+      form.append('image', logoFile)
+      const response = await fetch('/api/image', { method: 'POST', body: form })
+      const uploaded = await response.json()
+      if (!response.ok) return say(uploaded.error || '로고 이미지 업로드에 실패했습니다.')
+      item.logoImage = uploaded.url
+    }
   }
   d.site.title = $('title').value
   d.site.titleLines = $('title-lines').value.split('\n').filter(Boolean)
@@ -161,6 +170,31 @@ document.addEventListener('click', (event) => {
   renderTrash()
   say('복구했습니다. 저장하면 반영됩니다.')
 })
+const profileLogoStyle = document.createElement('style')
+profileLogoStyle.textContent = '.profile-logo-setting{clear:both;padding-top:10px}.profile-logo-setting img{display:block;float:none;width:150px;height:72px;object-fit:contain;object-position:left center;margin:6px 0;background:#292834;border:1px solid #565260}'
+document.head.append(profileLogoStyle)
+
+function renderProfileLogoInputs() {
+  if (!d) return
+  document.querySelectorAll('.card[data-type="profiles"]').forEach((card) => {
+    if (card.querySelector('.profile-logo-setting')) return
+    const profile = d.profiles[Number(card.dataset.i)]
+    const setting = document.createElement('div')
+    setting.className = 'profile-logo-setting'
+    setting.innerHTML = `<label>상세 설명 로고 이미지</label><input class="profile-logo-file" type="file" accept="image/*">${profile.logoImage ? `<img src="${profile.logoImage}" alt="현재 로고 이미지">` : ''}`
+    const input = setting.querySelector('.profile-logo-file')
+    input.addEventListener('change', () => {
+      const file = input.files[0]
+      if (!file) return
+      let preview = setting.querySelector('img')
+      if (!preview) { preview = document.createElement('img'); setting.append(preview) }
+      preview.src = URL.createObjectURL(file)
+      preview.alt = '선택한 로고 이미지'
+    })
+    card.append(setting)
+  })
+}
+
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderProfileLogoInputs() }
 renderTrash()
