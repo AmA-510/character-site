@@ -7,9 +7,54 @@ const siteImageSetting = document.createElement('div')
 siteImageSetting.innerHTML = '<h3>메인 대표 이미지</h3><label>메인에 무작위로 표시할 이미지들</label><input id="hero-image" type="file" accept="image/*" multiple><button type="button" id="add-hero-images">선택한 이미지 추가</button><div id="hero-preview" class="site-image-preview-list"></div><p class="muted">여러 장을 한 번에 추가할 수 있습니다. 아래 목록의 제거 버튼으로 등록된 이미지를 관리할 수 있습니다.</p>'
 document.querySelector('#hero').parentElement.append(siteImageSetting)
 
+const siteLinksSetting = document.createElement('div')
+siteLinksSetting.className = 'site-links-setting'
+siteLinksSetting.innerHTML = '<h3>메인 링크 버튼</h3><p class="muted">메인 제목 아래에 표시할 정사각형 링크입니다. 버튼을 누르면 새 탭으로 열립니다.</p><button type="button" id="add-site-link">링크 버튼 추가</button><div id="site-links-list"></div>'
+document.querySelector('#hero').parentElement.append(siteLinksSetting)
+
 const siteImageStyle = document.createElement('style')
 siteImageStyle.textContent = '.site-image-preview-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}.hero-image-item{width:110px}.site-image-preview-list img{display:block;width:110px;height:120px;object-fit:contain;background:#292834;border:1px solid #565260}.site-image-preview-list button{width:100%;margin:4px 0 0;padding:6px;background:#7b4654;color:#fff}'
 document.head.append(siteImageStyle)
+
+const siteLinksStyle = document.createElement('style')
+siteLinksStyle.textContent = '.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-card .site-link-remove{margin:0;padding:8px 10px;background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-card .site-link-remove{width:100%}}'
+document.head.append(siteLinksStyle)
+
+const escapeLinkText = (value = '') => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+function collectSiteLinks() {
+  if (!d) return
+  const previous = d.site.links || []
+  d.site.links = [...document.querySelectorAll('[data-site-link]')].map((card) => {
+    const index = Number(card.dataset.siteLink)
+    return {
+      id: previous[index]?.id || crypto.randomUUID(),
+      label: card.querySelector('[data-link-key="label"]').value.trim(),
+      url: card.querySelector('[data-link-key="url"]').value.trim(),
+      description: card.querySelector('[data-link-key="description"]').value.trim(),
+    }
+  }).filter((link) => link.label && link.url)
+}
+
+function renderSiteLinks() {
+  if (!d) return
+  d.site.links ||= []
+  document.querySelector('#site-links-list').innerHTML = d.site.links.map((link, index) => `<div class="site-link-card" data-site-link="${index}"><input data-link-key="label" value="${escapeLinkText(link.label)}" placeholder="버튼 이름"><input data-link-key="url" value="${escapeLinkText(link.url)}" placeholder="https://..."><input data-link-key="description" value="${escapeLinkText(link.description)}" placeholder="짧은 설명 (선택)"><button type="button" class="site-link-remove" data-remove-site-link="${index}">삭제</button></div>`).join('')
+}
+
+document.querySelector('#add-site-link').addEventListener('click', () => {
+  collectSiteLinks()
+  d.site.links.push({ id: crypto.randomUUID(), label: '', url: '', description: '' })
+  renderSiteLinks()
+})
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-remove-site-link]')
+  if (!button) return
+  collectSiteLinks()
+  d.site.links.splice(Number(button.dataset.removeSiteLink), 1)
+  renderSiteLinks()
+})
 
 for (const [inputId, previewId] of [['hero-image', 'hero-preview']]) {
   document.querySelector(`#${inputId}`).addEventListener('change', (event) => {
@@ -125,6 +170,7 @@ originalSaveButton?.addEventListener('click', async (event) => {
   d.site.title = $('title').value
   d.site.titleLines = $('title-lines').value.split('\n').filter(Boolean)
   d.site.heroLines = $('hero').value.split('\n').filter(Boolean)
+  collectSiteLinks()
   const response = await fetch('/api/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
   say(response.ok ? '저장됐습니다. 캐릭터사이트를 새로고침하세요.' : '저장에 실패했습니다.')
   if (response.ok) draw()
@@ -236,7 +282,7 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderStories() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderStories() }
 renderTrash()
 
 // Turn the long studio into focused work tabs and keep saving in reach.
