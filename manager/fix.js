@@ -17,7 +17,7 @@ siteImageStyle.textContent = '.site-image-preview-list{display:flex;flex-wrap:wr
 document.head.append(siteImageStyle)
 
 const siteLinksStyle = document.createElement('style')
-siteLinksStyle.textContent = '.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr 130px auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-logo{display:flex;gap:6px;align-items:center;font-size:11px}.site-link-logo input{max-width:90px}.site-link-logo img{width:30px;height:30px;object-fit:contain;background:#22212a}.site-link-controls{display:flex;gap:4px}.site-link-controls button{margin:0;padding:7px 9px}.site-link-card .site-link-remove{background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-controls{display:grid;grid-template-columns:1fr 1fr 1fr}.site-link-card .site-link-remove{width:100%}}'
+siteLinksStyle.textContent = '.gallery-card-summary{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:6px 0;background:transparent;color:#d8d5c6;text-align:left}.gallery-card-summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gallery-card-summary b{color:#ea497e;font-size:13px;font-weight:400;white-space:nowrap}.gallery-card-collapsed{padding:10px 14px}.gallery-card-collapsed>:not(.gallery-card-summary){display:none}.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr 130px auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-logo{display:flex;gap:6px;align-items:center;font-size:11px}.site-link-logo input{max-width:90px}.site-link-logo img{width:30px;height:30px;object-fit:contain;background:#22212a}.site-link-controls{display:flex;gap:4px}.site-link-controls button{margin:0;padding:7px 9px}.site-link-card .site-link-remove{background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-controls{display:grid;grid-template-columns:1fr 1fr 1fr}.site-link-card .site-link-remove{width:100%}}'
 document.head.append(siteLinksStyle)
 
 const escapeLinkText = (value = '') => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -290,6 +290,24 @@ function renderGalleryTagInputs() {
   })
 }
 
+function renderGalleryCardCollapses() {
+  if (!d) return
+  document.querySelectorAll('.card[data-type="gallery"]').forEach((card) => {
+    if (card.querySelector('.gallery-card-summary')) return
+    const item = d.gallery[Number(card.dataset.i)]
+    const summary = document.createElement('button')
+    summary.type = 'button'
+    summary.className = 'gallery-card-summary'
+    summary.innerHTML = `<span>${escapeLinkText(item.title || '제목 없는 이미지')}</span><b>수정 펼치기 ↓</b>`
+    summary.addEventListener('click', () => {
+      const isCollapsed = card.classList.toggle('gallery-card-collapsed')
+      summary.querySelector('b').textContent = isCollapsed ? '수정 펼치기 ↓' : '수정 접기 ↑'
+    })
+    card.prepend(summary)
+    card.classList.add('gallery-card-collapsed')
+  })
+}
+
 const storiesSection = document.createElement('section')
 storiesSection.innerHTML = '<h2>이야기</h2><p class="muted">짧은 소설, 독백, 기록을 추가할 수 있습니다.</p><button type="button" id="add-story">이야기 추가</button><div id="stories-list"></div>'
 document.querySelector('.w').append(storiesSection)
@@ -309,7 +327,7 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderStories() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderStories() }
 renderTrash()
 
 // Turn the long studio into focused work tabs and keep saving in reach.
