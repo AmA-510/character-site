@@ -2,8 +2,85 @@
 const titleLineSetting = document.createElement('div')
 titleLineSetting.innerHTML = '<label>메인 제목 줄바꿈</label><textarea id="title-lines" placeholder="한 줄마다 원하는 제목 줄을 입력하세요."></textarea><p class="muted">빈칸 없이 한 줄씩 입력하면 그 위치에서만 줄바꿈됩니다.</p>'
 document.querySelector('#hero').parentElement.append(titleLineSetting)
+
+const siteImageSetting = document.createElement('div')
+siteImageSetting.innerHTML = '<h3>메인 대표 이미지</h3><label>메인에 무작위로 표시할 이미지들</label><input id="hero-image" type="file" accept="image/*" multiple><button type="button" id="add-hero-images">선택한 이미지 추가</button><div id="hero-preview" class="site-image-preview-list"></div><p class="muted">여러 장을 한 번에 추가할 수 있습니다. 아래 목록의 제거 버튼으로 등록된 이미지를 관리할 수 있습니다.</p>'
+document.querySelector('#hero').parentElement.append(siteImageSetting)
+
+const siteImageStyle = document.createElement('style')
+siteImageStyle.textContent = '.site-image-preview-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}.hero-image-item{width:110px}.site-image-preview-list img{display:block;width:110px;height:120px;object-fit:contain;background:#292834;border:1px solid #565260}.site-image-preview-list button{width:100%;margin:4px 0 0;padding:6px;background:#7b4654;color:#fff}'
+document.head.append(siteImageStyle)
+
+for (const [inputId, previewId] of [['hero-image', 'hero-preview']]) {
+  document.querySelector(`#${inputId}`).addEventListener('change', (event) => {
+    const preview = document.querySelector(`#${previewId}`)
+    preview.innerHTML = [...event.target.files].map((file) => `<div class="hero-image-item"><img src="${URL.createObjectURL(file)}" alt="선택한 이미지"></div>`).join('')
+  })
+}
+
 fetch('/api/content').then((response) => response.json()).then((content) => {
   document.querySelector('#title-lines').value = (content.site.titleLines || [content.site.title]).join('\n')
+  renderHeroImages(content.site)
+})
+
+async function uploadSiteImages(inputId) {
+  const files = [...document.querySelector(`#${inputId}`).files]
+  const uploadedImages = []
+  for (const file of files) {
+    const form = new FormData()
+    form.append('image', file)
+    const response = await fetch('/api/image', { method: 'POST', body: form })
+    const uploaded = await response.json()
+    if (!response.ok) throw new Error(uploaded.error || '이미지 업로드에 실패했습니다.')
+    uploadedImages.push(uploaded.url)
+  }
+  return uploadedImages
+}
+
+function heroImageList(site) {
+  return site.heroImages?.length ? site.heroImages : site.heroImage ? [site.heroImage] : []
+}
+
+function renderHeroImages(site = d?.site) {
+  if (!site) return
+  document.querySelector('#hero-preview').innerHTML = heroImageList(site).map((url, index) => `<div class="hero-image-item"><img src="${url}" alt="등록된 메인 이미지"><button type="button" data-remove-hero-image="${index}">제거</button></div>`).join('')
+}
+
+async function saveHeroImages() {
+  const response = await fetch('/api/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
+  if (!response.ok) throw new Error('이미지 목록을 저장하지 못했습니다.')
+}
+
+document.querySelector('#add-hero-images').addEventListener('click', async () => {
+  try {
+    const images = await uploadSiteImages('hero-image')
+    if (!images.length) return say('추가할 이미지를 먼저 선택해 주세요.')
+    d.site.heroImages ||= d.site.heroImage ? [d.site.heroImage] : []
+    d.site.heroImages.push(...images)
+    delete d.site.heroImage
+    await saveHeroImages()
+    document.querySelector('#hero-image').value = ''
+    renderHeroImages()
+    say(`${images.length}장의 메인 이미지를 추가했습니다.`)
+  } catch (error) {
+    say(error.message)
+  }
+})
+
+document.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-remove-hero-image]')
+  if (!button) return
+  const index = Number(button.dataset.removeHeroImage)
+  d.site.heroImages ||= d.site.heroImage ? [d.site.heroImage] : []
+  delete d.site.heroImage
+  d.site.heroImages.splice(index, 1)
+  try {
+    await saveHeroImages()
+    renderHeroImages()
+    say('메인 이미지를 목록에서 제거했습니다.')
+  } catch (error) {
+    say(error.message)
+  }
 })
 
 const originalSaveButton = [...document.querySelectorAll('button')].find((button) => button.textContent.includes('모든 변경사항'))
@@ -85,5 +162,5 @@ document.addEventListener('click', (event) => {
   say('복구했습니다. 저장하면 반영됩니다.')
 })
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages() }
 renderTrash()
