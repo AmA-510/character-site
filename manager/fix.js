@@ -92,6 +92,7 @@ originalSaveButton?.addEventListener('click', async (event) => {
     const item = d[card.dataset.type][card.dataset.i]
     card.querySelectorAll('[data-k]').forEach((field) => { item[field.dataset.k] = field.value })
     if (item.links) item.links = item.links.split(',').map((value) => value.trim()).filter(Boolean)
+    if (card.dataset.type === 'gallery') item.tags = String(item.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean)
     const file = card.querySelector('.img')?.files[0]
     if (file) {
       say('프로필 이미지 업로드 중…')
@@ -195,6 +196,18 @@ function renderProfileLogoInputs() {
   })
 }
 
+function renderGalleryTagInputs() {
+  if (!d) return
+  document.querySelectorAll('.card[data-type="gallery"]').forEach((card) => {
+    if (card.querySelector('.gallery-tag-setting')) return
+    const item = d.gallery[Number(card.dataset.i)]
+    const setting = document.createElement('div')
+    setting.className = 'gallery-tag-setting'
+    setting.innerHTML = `<label>갤러리 태그</label><input data-k="tags" value="${(Array.isArray(item.tags) ? item.tags : String(item.tags || '').split(',')).filter(Boolean).join(', ')}" placeholder="예: 마리, 단독, 여행">`
+    card.querySelector('.danger').before(setting)
+  })
+}
+
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderProfileLogoInputs() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderProfileLogoInputs(); renderGalleryTagInputs() }
 renderTrash()
