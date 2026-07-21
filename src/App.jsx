@@ -9,7 +9,7 @@ const entries = data.entries || []
 const heroImages = data.site.heroImages?.length ? data.site.heroImages : data.site.heroImage ? [data.site.heroImage] : []
 const publicUrl = (url) => url?.startsWith('/') ? `${import.meta.env.BASE_URL}${url.slice(1)}` : url
 
-function Header() { return <header className="site-header"><a className="wordmark" href="#/">{data.site.title}</a><nav><a href="#/">메인</a><a href="#/profiles">캐릭터</a><a href="#/gallery">갤러리</a><a href="#/archive">도감</a></nav></header> }
+function Header() { const headerLines = data.site.titleLines?.filter(Boolean) || [data.site.title]; return <header className="site-header"><a className="wordmark" href="#/">{headerLines.map((line, index) => <span key={index}>{line}{index < headerLines.length - 1 && <br/>}</span>)}</a><nav><a href="#/">메인</a><a href="#/profiles">캐릭터</a><a href="#/gallery">갤러리</a><a href="#/archive">도감</a></nav></header> }
 function Back({ to = '#/' }) { return <a className="back-link" href={to}>← 돌아가기</a> }
 function Empty({ children }) { return <div className="empty-page">{children}</div> }
 
