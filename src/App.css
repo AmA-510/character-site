@@ -12,7 +12,7 @@ nav { display: flex; gap: 24px; } nav a { color: var(--muted); font-size: 13px; 
 .hero-section { min-height: 620px; position: relative; overflow: hidden; padding: 100px 0 76px; border-bottom: 1px solid var(--line); }.hero-copy-block { position: relative; z-index: 1; }
 .eyebrow { color: var(--accent); font: 11px/1.2 var(--mono); letter-spacing: .13em; margin: 0 0 18px; }
 h1, h2, h3, p { margin-top: 0; } h1, h2, h3 { font-family: var(--serif); font-weight: 500; }
-h1 { font-size: clamp(46px, 6.2vw, 82px); line-height: 1.1; letter-spacing: -.055em; max-width: 760px; margin-bottom: 30px; }.hero-title-box { display: inline-block; width: fit-content; box-sizing: border-box; padding: 12px 18px 15px; background: rgba(216,213,198,.09); }
+h1 { font-size: clamp(46px, 6.2vw, 82px); line-height: 1.1; letter-spacing: -.055em; max-width: 760px; margin-bottom: 30px; }.hero-title-box { display: inline-block; width: fit-content; box-sizing: border-box; padding: 12px 42px 15px 18px; background: linear-gradient(90deg, rgba(216,213,198,.09) 0%, rgba(216,213,198,.09) 62%, rgba(216,213,198,0) 100%); }
 .hero-copy { color: var(--muted); font-size: 16px; line-height: 1.8; }
 .hero-actions { display: flex; align-items: flex-start; gap: 22px; margin-top: 40px; position: relative; padding-bottom: 36px; }
 .primary-link, .quiet-link { display: inline-flex; gap: 12px; align-items: center; text-decoration: none; font-size: 14px; }
