@@ -92,7 +92,7 @@ originalSaveButton?.addEventListener('click', async (event) => {
     const item = d[card.dataset.type][card.dataset.i]
     card.querySelectorAll('[data-k]').forEach((field) => { item[field.dataset.k] = field.value })
     if (item.links) item.links = item.links.split(',').map((value) => value.trim()).filter(Boolean)
-    if (card.dataset.type === 'gallery') item.tags = String(item.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean)
+    if (card.dataset.type === 'gallery' || card.dataset.type === 'stories') item.tags = String(item.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean)
     const file = card.querySelector('.img')?.files[0]
     if (file) {
       say('프로필 이미지 업로드 중…')
@@ -111,6 +111,15 @@ originalSaveButton?.addEventListener('click', async (event) => {
       const uploaded = await response.json()
       if (!response.ok) return say(uploaded.error || '로고 이미지 업로드에 실패했습니다.')
       item.logoImage = uploaded.url
+    }
+    const coverFile = card.querySelector('.story-cover-file')?.files[0]
+    if (coverFile) {
+      const form = new FormData()
+      form.append('image', coverFile)
+      const response = await fetch('/api/image', { method: 'POST', body: form })
+      const uploaded = await response.json()
+      if (!response.ok) return say(uploaded.error || '표지 이미지 업로드에 실패했습니다.')
+      item.coverImage = uploaded.url
     }
   }
   d.site.title = $('title').value
@@ -208,6 +217,24 @@ function renderGalleryTagInputs() {
   })
 }
 
+const storiesSection = document.createElement('section')
+storiesSection.innerHTML = '<h2>이야기</h2><p class="muted">짧은 소설, 독백, 기록을 추가할 수 있습니다.</p><button type="button" id="add-story">이야기 추가</button><div id="stories-list"></div>'
+document.querySelector('.w').append(storiesSection)
+
+const escapeStoryText = (value = '') => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+function renderStories() {
+  if (!d) return
+  d.stories ||= []
+  document.querySelector('#stories-list').innerHTML = d.stories.map((story, index) => `<div class="card" data-type="stories" data-i="${index}">${story.coverImage ? `<img src="${story.coverImage}" alt="표지 이미지">` : ''}<input data-k="title" value="${escapeStoryText(story.title)}" placeholder="이야기 제목"><input data-k="summary" value="${escapeStoryText(story.summary)}" placeholder="짧은 소개"><input data-k="tags" value="${escapeStoryText((Array.isArray(story.tags) ? story.tags : []).join(', '))}" placeholder="태그: 마리, 여행"><textarea data-k="body" placeholder="이야기 본문">${escapeStoryText(story.body)}</textarea><label>표지 이미지 (선택)</label><input class="story-cover-file" type="file" accept="image/*"><button onclick="removeItem('stories',${index})" class="danger">삭제</button></div>`).join('')
+}
+
+document.querySelector('#add-story').addEventListener('click', () => {
+  d.stories ||= []
+  d.stories.push({ id: crypto.randomUUID(), title: '', summary: '', body: '', tags: [], coverImage: '' })
+  draw()
+})
+
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderProfileLogoInputs(); renderGalleryTagInputs() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderStories() }
 renderTrash()
