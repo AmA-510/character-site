@@ -21,6 +21,22 @@
       "/content-images/1784634556569-------2.png",
       "/content-images/1784635112276-------3.png",
       "/content-images/1784635112282-------4.png"
+    ],
+    "links": [
+      {
+        "id": "e2b1a10a-cfe7-47b9-8608-83b2adc1c90c",
+        "label": "X",
+        "url": "https://x.com/akirama1417491",
+        "description": "",
+        "logoImage": "/content-images/1784642479100-X.png"
+      },
+      {
+        "id": "c35881fe-dfd6-4ff3-ad62-56297a23953a",
+        "label": "Pixiv",
+        "url": "https://www.pixiv.net/users/107824468",
+        "description": "",
+        "logoImage": "/content-images/1784642134387----------.png"
+      }
     ]
   },
   "profiles": [

@@ -17,7 +17,7 @@ siteImageStyle.textContent = '.site-image-preview-list{display:flex;flex-wrap:wr
 document.head.append(siteImageStyle)
 
 const siteLinksStyle = document.createElement('style')
-siteLinksStyle.textContent = '.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-card .site-link-remove{margin:0;padding:8px 10px;background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-card .site-link-remove{width:100%}}'
+siteLinksStyle.textContent = '.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr 130px auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-logo{display:flex;gap:6px;align-items:center;font-size:11px}.site-link-logo input{max-width:90px}.site-link-logo img{width:30px;height:30px;object-fit:contain;background:#22212a}.site-link-controls{display:flex;gap:4px}.site-link-controls button{margin:0;padding:7px 9px}.site-link-card .site-link-remove{background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-controls{display:grid;grid-template-columns:1fr 1fr 1fr}.site-link-card .site-link-remove{width:100%}}'
 document.head.append(siteLinksStyle)
 
 const escapeLinkText = (value = '') => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -28,10 +28,11 @@ function collectSiteLinks() {
   d.site.links = [...document.querySelectorAll('[data-site-link]')].map((card) => {
     const index = Number(card.dataset.siteLink)
     return {
-      id: previous[index]?.id || crypto.randomUUID(),
+      id: card.dataset.siteLinkId || previous[index]?.id || crypto.randomUUID(),
       label: card.querySelector('[data-link-key="label"]').value.trim(),
       url: card.querySelector('[data-link-key="url"]').value.trim(),
       description: card.querySelector('[data-link-key="description"]').value.trim(),
+      logoImage: previous[index]?.logoImage || '',
     }
   }).filter((link) => link.label && link.url)
 }
@@ -39,7 +40,7 @@ function collectSiteLinks() {
 function renderSiteLinks() {
   if (!d) return
   d.site.links ||= []
-  document.querySelector('#site-links-list').innerHTML = d.site.links.map((link, index) => `<div class="site-link-card" data-site-link="${index}"><input data-link-key="label" value="${escapeLinkText(link.label)}" placeholder="버튼 이름"><input data-link-key="url" value="${escapeLinkText(link.url)}" placeholder="https://..."><input data-link-key="description" value="${escapeLinkText(link.description)}" placeholder="짧은 설명 (선택)"><button type="button" class="site-link-remove" data-remove-site-link="${index}">삭제</button></div>`).join('')
+  document.querySelector('#site-links-list').innerHTML = d.site.links.map((link, index) => `<div class="site-link-card" data-site-link="${index}" data-site-link-id="${link.id}"><input data-link-key="label" value="${escapeLinkText(link.label)}" placeholder="버튼 이름"><input data-link-key="url" value="${escapeLinkText(link.url)}" placeholder="https://..."><input data-link-key="description" value="${escapeLinkText(link.description)}" placeholder="짧은 설명 (선택)"><label class="site-link-logo">로고<input class="site-link-logo-file" type="file" accept="image/*">${link.logoImage ? `<img src="${link.logoImage}" alt="현재 로고">` : ''}</label><div class="site-link-controls"><button type="button" data-move-site-link="${index}" data-direction="-1" ${index === 0 ? 'disabled' : ''}>↑</button><button type="button" data-move-site-link="${index}" data-direction="1" ${index === d.site.links.length - 1 ? 'disabled' : ''}>↓</button><button type="button" class="site-link-remove" data-remove-site-link="${index}">삭제</button></div></div>`).join('')
 }
 
 document.querySelector('#add-site-link').addEventListener('click', () => {
@@ -48,11 +49,36 @@ document.querySelector('#add-site-link').addEventListener('click', () => {
   renderSiteLinks()
 })
 
+async function saveSiteLinkLogos() {
+  for (const card of document.querySelectorAll('[data-site-link]')) {
+    const file = card.querySelector('.site-link-logo-file')?.files[0]
+    if (!file) continue
+    const form = new FormData()
+    form.append('image', file)
+    const response = await fetch('/api/image', { method: 'POST', body: form })
+    const uploaded = await response.json()
+    if (!response.ok) throw new Error(uploaded.error || '링크 로고 이미지 업로드에 실패했습니다.')
+    const link = d.site.links.find((item) => item.id === card.dataset.siteLinkId)
+    if (link) link.logoImage = uploaded.url
+  }
+}
+
 document.addEventListener('click', (event) => {
   const button = event.target.closest('[data-remove-site-link]')
   if (!button) return
   collectSiteLinks()
   d.site.links.splice(Number(button.dataset.removeSiteLink), 1)
+  renderSiteLinks()
+})
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-move-site-link]')
+  if (!button) return
+  collectSiteLinks()
+  const index = Number(button.dataset.moveSiteLink)
+  const nextIndex = index + Number(button.dataset.direction)
+  if (nextIndex < 0 || nextIndex >= d.site.links.length) return
+  ;[d.site.links[index], d.site.links[nextIndex]] = [d.site.links[nextIndex], d.site.links[index]]
   renderSiteLinks()
 })
 
@@ -171,6 +197,7 @@ originalSaveButton?.addEventListener('click', async (event) => {
   d.site.titleLines = $('title-lines').value.split('\n').filter(Boolean)
   d.site.heroLines = $('hero').value.split('\n').filter(Boolean)
   collectSiteLinks()
+  await saveSiteLinkLogos()
   const response = await fetch('/api/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
   say(response.ok ? '저장됐습니다. 캐릭터사이트를 새로고침하세요.' : '저장에 실패했습니다.')
   if (response.ok) draw()
