@@ -124,21 +124,25 @@
       "text": "추가 예정입니다.",
       "links": [
         "텟쨩"
-      ]
+      ],
+      "profileId": "c595ab65-a3ff-4150-891f-0fa1336f94c1",
+      "image": "/content-images/1784647328900-------.jpg"
     },
     {
       "id": "entry-1",
       "type": "배경",
       "title": "시대 배경",
       "text": "추가 예정입니다.",
-      "links": ""
+      "links": "",
+      "profileId": ""
     },
     {
       "id": "entry-2",
       "type": "장소",
       "title": "배경A",
       "text": "추가 예정입니다.",
-      "links": ""
+      "links": "",
+      "profileId": ""
     },
     {
       "id": "1eee2d19-478e-4fc8-8f2f-9a19e58648f9",
@@ -147,21 +151,25 @@
       "text": "추가 예정입니다.",
       "links": [
         "마리"
-      ]
+      ],
+      "profileId": "ab743cff-eeb2-4fea-bc2f-261bb033cf76",
+      "image": "/content-images/1784647328907-------.jpg"
     },
     {
       "id": "a680837a-c364-4978-821f-36e33488ce33",
       "type": "배경",
       "title": "기본 설정",
       "text": "추가 예정입니다.",
-      "links": ""
+      "links": "",
+      "profileId": ""
     },
     {
       "id": "741989ea-7710-4776-bcbe-68fe63a3a3e8",
       "type": "테스트탭",
       "title": "테스트입니다.",
       "text": "추가 예정입니다.",
-      "links": ""
+      "links": "",
+      "profileId": ""
     }
   ],
   "stories": []

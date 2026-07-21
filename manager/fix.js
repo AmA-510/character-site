@@ -198,6 +198,15 @@ originalSaveButton?.addEventListener('click', async (event) => {
       if (!response.ok) return say(uploaded.error || '표지 이미지 업로드에 실패했습니다.')
       item.coverImage = uploaded.url
     }
+    const entryImageFile = card.querySelector('.entry-image-file')?.files[0]
+    if (entryImageFile) {
+      const form = new FormData()
+      form.append('image', entryImageFile)
+      const response = await fetch('/api/image', { method: 'POST', body: form })
+      const uploaded = await response.json()
+      if (!response.ok) return say(uploaded.error || '도감 이미지 업로드에 실패했습니다.')
+      item.image = uploaded.url
+    }
   }
   d.site.title = $('title').value
   d.site.titleLines = $('title-lines').value.split('\n').filter(Boolean)
@@ -358,6 +367,22 @@ function renderEntryPagination() {
   pager.innerHTML = Array.from({ length: pageCount }, (_, index) => `<button type="button" class="${index === entryEditorPage ? 'active' : ''}" data-entry-editor-page="${index}">${index + 1}</button>`).join('')
 }
 
+function renderEntryExtras() {
+  if (!d) return
+  document.querySelectorAll('.card[data-type="entries"]').forEach((card) => {
+    if (card.querySelector('.entry-extra-setting')) return
+    const entry = d.entries[Number(card.dataset.i)]
+    const setting = document.createElement('div')
+    setting.className = 'entry-extra-setting'
+    setting.innerHTML = `<label>도감 오른쪽 정사각형 이미지 (선택)</label><input class="entry-image-file" type="file" accept="image/*">${entry.image ? `<img src="${entry.image}" alt="현재 도감 이미지">` : ''}<label>연결할 캐릭터 프로필 (선택)</label><select data-k="profileId"><option value="">연결하지 않음</option>${d.profiles.map((profile) => `<option value="${profile.id}" ${entry.profileId === profile.id ? 'selected' : ''}>${escapeLinkText(profile.name || '이름 없는 캐릭터')}</option>`).join('')}</select>`
+    card.querySelector('.danger').before(setting)
+  })
+}
+
+const entryExtraStyle = document.createElement('style')
+entryExtraStyle.textContent = '.entry-extra-setting{clear:both;padding-top:12px}.entry-extra-setting select{box-sizing:border-box;width:100%;margin:6px 0;padding:10px;background:#292834;color:#d8d5c6;border:1px solid #565260;font:inherit}.entry-extra-setting img{display:block;width:92px;height:92px;margin:6px 0 12px;object-fit:cover;background:#292834;border:1px solid #565260}'
+document.head.append(entryExtraStyle)
+
 document.addEventListener('click', (event) => {
   const button = event.target.closest('[data-entry-editor-page]')
   if (!button) return
@@ -384,7 +409,7 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderEntryPagination(); renderStories() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderEntryExtras(); renderEntryPagination(); renderStories() }
 renderTrash()
 
 // Turn the long studio into focused work tabs and keep saving in reach.
