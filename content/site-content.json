@@ -67,7 +67,11 @@
       "summary": "사라진 히치하이커",
       "story": "수정예정입니다.",
       "image": "/content-images/1784635451201-162.jpg",
-      "logoImage": "/content-images/1784635624815-------2.png"
+      "logoImage": "/content-images/1784635624815-------2.png",
+      "previewText": "머리에 뿔이 있는 약간은 미스테리한 소녀입니다.",
+      "previewCropX": "100",
+      "previewCropY": "0",
+      "previewCropScale": "1.9"
     },
     {
       "id": "ab743cff-eeb2-4fea-bc2f-261bb033cf76",
@@ -75,7 +79,11 @@
       "summary": "테세우스의 배",
       "story": "수정예정입니다.",
       "image": "/content-images/1784635755085-163.jpg",
-      "logoImage": "/content-images/1784635896698-------2.png"
+      "logoImage": "/content-images/1784635896698-------2.png",
+      "previewText": "파랑과 보라 사이의 머리카락을 가진 소심한 소녀입니다.",
+      "previewCropX": "8",
+      "previewCropY": "0",
+      "previewCropScale": "1.9"
     }
   ],
   "gallery": [

@@ -269,7 +269,7 @@ document.addEventListener('click', (event) => {
   say('복구했습니다. 저장하면 반영됩니다.')
 })
 const profileLogoStyle = document.createElement('style')
-profileLogoStyle.textContent = '.profile-logo-setting{clear:both;padding-top:10px}.profile-logo-setting img{display:block;float:none;width:150px;height:72px;object-fit:contain;object-position:left center;margin:6px 0;background:#292834;border:1px solid #565260}'
+profileLogoStyle.textContent = '.profile-logo-setting{clear:both;padding-top:10px}.profile-logo-setting img{display:block;float:none;width:150px;height:72px;object-fit:contain;object-position:left center;margin:6px 0;background:#292834;border:1px solid #565260}.profile-preview-setting{clear:both;display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:14px;padding-top:14px}.profile-preview-controls label{display:block;margin-top:7px}.profile-preview-controls input[type="range"]{max-width:250px;padding:0}.profile-preview-editor-frame{width:118px;height:118px;overflow:hidden;background:#292834;border:1px solid #565260}.profile-preview-editor-image{display:block;width:100%;height:100%;object-fit:cover}@media(max-width:520px){.profile-preview-setting{grid-template-columns:1fr}.profile-preview-editor-frame{width:118px;height:118px}}'
 document.head.append(profileLogoStyle)
 
 function renderProfileLogoInputs() {
@@ -289,6 +289,23 @@ function renderProfileLogoInputs() {
       preview.src = URL.createObjectURL(file)
       preview.alt = '선택한 로고 이미지'
     })
+    card.append(setting)
+  })
+}
+
+function renderProfilePreviewInputs() {
+  if (!d) return
+  document.querySelectorAll('.card[data-type="profiles"]').forEach((card) => {
+    if (card.querySelector('.profile-preview-setting')) return
+    const profile = d.profiles[Number(card.dataset.i)]
+    const setting = document.createElement('div')
+    setting.className = 'profile-preview-setting'
+    setting.innerHTML = `<div class="profile-preview-controls"><label>메인 미리보기 짧은 소개</label><input data-k="previewText" value="${escapeLinkText(profile.previewText || '')}" placeholder="메인에 표시할 짧은 소개 (비워두면 기존 짧은 소개 사용)"><label>미리보기 이미지 위치 — 가로</label><input data-k="previewCropX" type="range" min="0" max="100" value="${profile.previewCropX ?? 50}"><label>미리보기 이미지 위치 — 세로</label><input data-k="previewCropY" type="range" min="0" max="100" value="${profile.previewCropY ?? 30}"><label>미리보기 이미지 확대</label><input data-k="previewCropScale" type="range" min="1" max="2" step="0.05" value="${profile.previewCropScale ?? 1}"></div>${profile.image ? `<div class="profile-preview-editor-frame"><img class="profile-preview-editor-image" src="${profile.image}" alt="메인 미리보기" style="object-position:${profile.previewCropX ?? 50}% ${profile.previewCropY ?? 30}%;transform:scale(${profile.previewCropScale ?? 1});transform-origin:${profile.previewCropX ?? 50}% ${profile.previewCropY ?? 30}%"></div>` : '<p class="muted">캐릭터 이미지를 등록하면 이곳에서 미리보기 위치를 조정할 수 있습니다.</p>'}`
+    const refreshPreview = () => {
+      const image = setting.querySelector('.profile-preview-editor-image')
+      if (image) { const position = `${setting.querySelector('[data-k="previewCropX"]').value}% ${setting.querySelector('[data-k="previewCropY"]').value}%`; image.style.objectPosition = position; image.style.transformOrigin = position; image.style.transform = `scale(${setting.querySelector('[data-k="previewCropScale"]').value})` }
+    }
+    setting.querySelectorAll('input[type="range"]').forEach((input) => input.addEventListener('input', refreshPreview))
     card.append(setting)
   })
 }
@@ -367,7 +384,7 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderEntryPagination(); renderStories() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderEntryPagination(); renderStories() }
 renderTrash()
 
 // Turn the long studio into focused work tabs and keep saving in reach.
