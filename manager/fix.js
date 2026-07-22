@@ -1,4 +1,27 @@
 // Reliable image saving and a lightweight image preview for the local editor.
+const nativeFetch = window.fetch.bind(window)
+async function makeWebImage(file, maxSize = 2200, quality = .9) {
+  if (!file?.type?.startsWith('image/') || /svg|gif/.test(file.type)) return file
+  const source = await createImageBitmap(file)
+  const scale = Math.min(1, maxSize / Math.max(source.width, source.height))
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.max(1, Math.round(source.width * scale))
+  canvas.height = Math.max(1, Math.round(source.height * scale))
+  canvas.getContext('2d').drawImage(source, 0, 0, canvas.width, canvas.height)
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', quality))
+  source.close?.()
+  return blob ? new File([blob], `${file.name.replace(/\.[^.]+$/, '') || 'image'}.webp`, { type: 'image/webp' }) : file
+}
+window.fetch = async (input, init = {}) => {
+  if (String(input) === '/api/image' && init.body instanceof FormData) {
+    const image = init.body.get('image')
+    if (image instanceof File) {
+      const optimized = await makeWebImage(image)
+      if (optimized !== image) init.body.set('image', optimized)
+    }
+  }
+  return nativeFetch(input, init)
+}
 const titleLineSetting = document.createElement('div')
 titleLineSetting.innerHTML = '<label>메인 제목 줄바꿈</label><textarea id="title-lines" placeholder="한 줄마다 원하는 제목 줄을 입력하세요."></textarea><p class="muted">빈칸 없이 한 줄씩 입력하면 그 위치에서만 줄바꿈됩니다.</p>'
 document.querySelector('#hero').parentElement.append(titleLineSetting)
@@ -16,6 +39,11 @@ const noticeSetting = document.createElement('div')
 noticeSetting.className = 'notice-setting'
 noticeSetting.innerHTML = '<h3>슬라이드형 공지 / 추천</h3><label class="notice-toggle"><input id="notice-enabled" type="checkbox"> 대문과 링크 사이에 공지 영역 표시</label><p class="muted">여러 항목을 등록하면 약 5초마다 다음 공지로 자동 전환됩니다. 아래 점을 눌러 원하는 공지로 바로 이동할 수도 있습니다.</p><button type="button" id="add-notice">공지 추가</button><div id="notice-list"></div>'
 document.querySelector('#hero').parentElement.append(noticeSetting)
+
+const imageOptimizationSetting = document.createElement('div')
+imageOptimizationSetting.className = 'image-optimization-setting'
+imageOptimizationSetting.innerHTML = '<h3>이미지 자동 최적화</h3><p class="muted">앞으로 수정툴에서 추가하는 이미지는 자동으로 웹용 WebP 파일로 변환됩니다. 아래 버튼은 이미 등록된 이미지를 한 번에 웹용 복사본으로 바꾸며, 기존 원본 파일은 삭제하지 않습니다.</p><button type="button" id="optimize-existing-images">기존 이미지 일괄 최적화</button>'
+document.querySelector('#hero').parentElement.append(imageOptimizationSetting)
 
 const siteImageStyle = document.createElement('style')
 siteImageStyle.textContent = '.site-image-preview-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}.hero-image-item{width:110px}.site-image-preview-list img{display:block;width:110px;height:120px;object-fit:contain;background:#292834;border:1px solid #565260}.site-image-preview-list button{width:100%;margin:4px 0 0;padding:6px;background:#7b4654;color:#fff}'
@@ -209,6 +237,48 @@ document.addEventListener('click', (event) => {
   else { const next = index + Number(button.dataset.direction); if (next < 0 || next >= d.site.notices.length) return; [d.site.notices[index], d.site.notices[next]] = [d.site.notices[next], d.site.notices[index]] }
   noticesDirty = true
   renderNotices()
+})
+
+async function optimizeStoredImage(url, cache) {
+  if (!url || !url.startsWith('/content-images/')) return url
+  if (cache.has(url)) return cache.get(url)
+  const source = await nativeFetch(url)
+  if (!source.ok) throw new Error('기존 이미지 파일을 읽지 못했습니다.')
+  const blob = await source.blob()
+  const file = new File([blob], url.split('/').pop() || 'image', { type: blob.type || 'image/jpeg' })
+  const optimized = await makeWebImage(file)
+  const form = new FormData(); form.append('image', optimized)
+  const response = await nativeFetch('/api/image', { method: 'POST', body: form })
+  const uploaded = await response.json()
+  if (!response.ok) throw new Error(uploaded.error || '이미지 변환에 실패했습니다.')
+  cache.set(url, uploaded.url)
+  return uploaded.url
+}
+document.querySelector('#optimize-existing-images').addEventListener('click', async () => {
+  if (!d || !confirm('등록된 이미지의 웹용 복사본을 만들까요? 원본 파일은 삭제되지 않습니다.')) return
+  const targets = []
+  const add = (object, key) => { if (object?.[key]) targets.push({ object, key }) }
+  d.gallery.forEach((item) => add(item, 'url'))
+  ;(d.sketches || []).forEach((item) => add(item, 'url'))
+  d.profiles.forEach((item) => add(item, 'image'))
+  d.entries.forEach((item) => add(item, 'image'))
+  ;(d.stories || []).forEach((item) => add(item, 'coverImage'))
+  ;(d.site.notices || []).forEach((item) => add(item, 'image'))
+  ;(d.site.heroImages || []).forEach((_url, index) => targets.push({ object: d.site.heroImages, key: index }))
+  const cache = new Map()
+  try {
+    for (let index = 0; index < targets.length; index += 1) {
+      const target = targets[index]
+      say(`이미지 최적화 중… ${index + 1} / ${targets.length}`)
+      target.object[target.key] = await optimizeStoredImage(target.object[target.key], cache)
+    }
+    const response = await nativeFetch('/api/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
+    if (!response.ok) throw new Error('최적화된 목록을 저장하지 못했습니다.')
+    draw()
+    say(`완료했습니다. ${cache.size}개의 웹용 이미지 복사본을 만들었습니다.`)
+  } catch (error) {
+    say(error.message || '이미지 최적화에 실패했습니다.')
+  }
 })
 
 const originalSaveButton = [...document.querySelectorAll('button')].find((button) => button.textContent.includes('모든 변경사항'))

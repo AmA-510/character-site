@@ -17,10 +17,10 @@
     ],
     "logoImage": "/content-images/1784633669584-------2.png",
     "heroImages": [
-      "/content-images/1784634394392-------1.png",
-      "/content-images/1784634556569-------2.png",
-      "/content-images/1784635112276-------3.png",
-      "/content-images/1784651227921-------6.png"
+      "/content-images/1784699758433-1784634394392-------1.webp",
+      "/content-images/1784699758682-1784634556569-------2.webp",
+      "/content-images/1784699758870-1784635112276-------3.webp",
+      "/content-images/1784699759096-1784651227921-------6.webp"
     ],
     "links": [
       {
@@ -66,108 +66,108 @@
         "title": "테스트",
         "text": "10/24~10/25 제2회 코미버스 예정",
         "url": "https://x.com/comiv_official",
-        "image": "/content-images/1784693286784-------5.png"
+        "image": "/content-images/1784699757231-1784693286784-------5.webp"
       },
       {
         "id": "41bcd525-bd48-4031-8e67-9769f9e860fb",
         "title": "테스트2",
         "text": "돈까스 먹고싶음",
         "url": "https://x.com/akirama1417491",
-        "image": "/content-images/1784693383382-------1.png"
+        "image": "/content-images/1784699757652-1784693383382-------1.webp"
       },
       {
         "id": "77cb0a8f-4980-4331-bffa-5e76c068152f",
         "title": "테스트3",
         "text": "졸\n려",
         "url": "#/gallery/4",
-        "image": "/content-images/1784693444186-136.jpg"
+        "image": "/content-images/1784699758028-1784693444186-136.webp"
       }
     ]
   },
   "sketches": [
     {
       "id": "660dabf6-0a24-4180-824c-ad9fad3a7c05",
-      "url": "/content-images/1784696799226-------------.jpg",
+      "url": "/content-images/1784699753412-1784696799226-------------.webp",
       "date": "2026-07-08"
     },
     {
       "id": "4712dabd-6c6d-4ce7-98cf-82eb5098cc45",
-      "url": "/content-images/1784696807647-------------2.jpg",
+      "url": "/content-images/1784699753460-1784696807647-------------2.webp",
       "date": "2026-07-08"
     },
     {
       "id": "8b5a9404-aec4-4bfd-90c3-d9d55e547083",
-      "url": "/content-images/1784696835166-25.08.25.------.jpg",
+      "url": "/content-images/1784699753581-1784696835166-25.08.25.------.webp",
       "date": "2025-08-25"
     },
     {
       "id": "829609a8-b8fd-44ca-b05c-e03c2919f7a5",
-      "url": "/content-images/1784696845864-25.10.17.jpg",
+      "url": "/content-images/1784699753745-1784696845864-25.10.17.webp",
       "date": "2025-10-17"
     },
     {
       "id": "f7a88706-dbd0-4c80-95e8-9a51d0152171",
-      "url": "/content-images/1784696853353-25.10.19.------.jpg",
+      "url": "/content-images/1784699753863-1784696853353-25.10.19.------.webp",
       "date": "2025-10-19"
     },
     {
       "id": "0ed26920-5a91-4de1-91cf-afc196419659",
-      "url": "/content-images/1784696863560-25.10.27.------.jpg",
+      "url": "/content-images/1784699753980-1784696863560-25.10.27.------.webp",
       "date": "2025-10-27"
     },
     {
       "id": "84b9cfcb-c2c8-4e64-9682-4ac4ef063ba7",
-      "url": "/content-images/1784696875717-25.11.18.jpg",
+      "url": "/content-images/1784699754121-1784696875717-25.11.18.webp",
       "date": "2025-11-18"
     },
     {
       "id": "714c15e8-e130-441a-b3d2-7ef66520419d",
-      "url": "/content-images/1784696885987-25.12.02.------.jpg",
+      "url": "/content-images/1784699754183-1784696885987-25.12.02.------.webp",
       "date": "2025-12-02"
     },
     {
       "id": "a85d23e6-2a96-44ed-993a-bc1b5f487dae",
-      "url": "/content-images/1784696921499-------------.jpg",
+      "url": "/content-images/1784699754235-1784696921499-------------.webp",
       "date": "2026-05-15"
     },
     {
       "id": "ddb8edcc-2455-44f2-8c8b-f840848f9b1a",
-      "url": "/content-images/1784696933069----------------------------.jpg",
+      "url": "/content-images/1784699754423-1784696933069----------------------------.webp",
       "date": "2026-04-01"
     },
     {
       "id": "6725e8a0-247d-49ce-8d9c-e89082ac2bb8",
-      "url": "/content-images/1784696947731-154.jpg",
+      "url": "/content-images/1784699754675-1784696947731-154.webp",
       "date": "2026-05-09"
     },
     {
       "id": "c261674d-3de5-4445-b1a0-6c4e511c7704",
-      "url": "/content-images/1784696960021-143.jpg",
+      "url": "/content-images/1784699754910-1784696960021-143.webp",
       "date": "2026-04-21"
     },
     {
       "id": "479c65a2-d9f7-4ac5-8e0f-0e8bb1fbaaf2",
-      "url": "/content-images/1784696968565-144.jpg",
+      "url": "/content-images/1784699755090-1784696968565-144.webp",
       "date": "2026-04-22"
     },
     {
       "id": "099f96ad-37f4-4901-afb9-037e6dd37ead",
-      "url": "/content-images/1784696977940-145.jpg",
+      "url": "/content-images/1784699755312-1784696977940-145.webp",
       "date": "2026-04-24"
     },
     {
       "id": "ffb15264-2a7d-4800-91e4-981ed88bf482",
-      "url": "/content-images/1784696984444-146.jpg",
+      "url": "/content-images/1784699755520-1784696984444-146.webp",
       "date": "2026-04-24"
     },
     {
       "id": "7ac118ec-3741-4b49-984a-eea89c1fe78b",
-      "url": "/content-images/1784696992146-147.jpg",
+      "url": "/content-images/1784699755745-1784696992146-147.webp",
       "date": "2026-04-25"
     },
     {
       "id": "656527c2-dbec-42c1-a5e6-f9ac68dd1ed7",
-      "url": "/content-images/1784696999768-148.jpg",
+      "url": "/content-images/1784699755985-1784696999768-148.webp",
       "date": "2026-04-26"
     }
   ],
@@ -177,7 +177,7 @@
       "name": "마리",
       "summary": "사라진 히치하이커",
       "story": "수정예정입니다.",
-      "image": "/content-images/1784635451201-162.jpg",
+      "image": "/content-images/1784699756277-1784635451201-162.webp",
       "logoImage": "/content-images/1784635624815-------2.png",
       "previewText": "머리에 뿔이 있는 약간은 미스테리한 소녀입니다.",
       "previewCropX": "100",
@@ -189,7 +189,7 @@
       "name": "텟쨩",
       "summary": "테세우스의 배",
       "story": "수정예정입니다.",
-      "image": "/content-images/1784635755085-163.jpg",
+      "image": "/content-images/1784699756599-1784635755085-163.webp",
       "logoImage": "/content-images/1784635896698-------2.png",
       "previewText": "파랑과 보라 사이의 머리카락을 가진 소심한 소녀입니다.",
       "previewCropX": "8",
@@ -199,7 +199,7 @@
   ],
   "gallery": [
     {
-      "url": "/content-images/1784651584938-162.jpg",
+      "url": "/content-images/1784699746148-1784651584938-162.webp",
       "title": "마리",
       "story": "",
       "tags": [
@@ -207,7 +207,7 @@
       ]
     },
     {
-      "url": "/content-images/1784651599929-163.jpg",
+      "url": "/content-images/1784699746462-1784651599929-163.webp",
       "title": "텟쨩",
       "story": "",
       "tags": [
@@ -215,7 +215,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653647083-1.------2.jpg",
+      "url": "/content-images/1784699746814-1784653647083-1.------2.webp",
       "title": "마리 프로필카드",
       "story": "",
       "tags": [
@@ -223,7 +223,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653683998-6.jpg",
+      "url": "/content-images/1784699747154-1784653683998-6.webp",
       "title": "텟쨩 프로필카드",
       "story": "",
       "tags": [
@@ -231,7 +231,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653475881-2.---------.png",
+      "url": "/content-images/1784699747441-1784653475881-2.---------.webp",
       "title": "메이드",
       "story": "",
       "tags": [
@@ -239,7 +239,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653495723-3.------------.png",
+      "url": "/content-images/1784699747720-1784653495723-3.------------.webp",
       "title": "서큐버스",
       "story": "",
       "tags": [
@@ -247,7 +247,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653513236-4.---------.png",
+      "url": "/content-images/1784699748156-1784653513236-4.---------.webp",
       "title": "마법사",
       "story": "",
       "tags": [
@@ -255,7 +255,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653528344-5.------.jpg",
+      "url": "/content-images/1784699749074-1784653528344-5.------.webp",
       "title": "꽃잎",
       "story": "",
       "tags": [
@@ -263,7 +263,7 @@
       ]
     },
     {
-      "url": "/content-images/1784616406473-134.jpg",
+      "url": "/content-images/1784699749467-1784616406473-134.webp",
       "title": "종말",
       "story": "내용 수정중.",
       "tags": [
@@ -271,7 +271,7 @@
       ]
     },
     {
-      "url": "/content-images/1784640256611-136.jpg",
+      "url": "/content-images/1784699749842-1784640256611-136.webp",
       "title": "윤회",
       "story": "내용 수정중.",
       "tags": [
@@ -279,7 +279,7 @@
       ]
     },
     {
-      "url": "/content-images/1784651430691-138.jpg",
+      "url": "/content-images/1784699750146-1784651430691-138.webp",
       "title": "모조",
       "story": "",
       "tags": [
@@ -287,7 +287,7 @@
       ]
     },
     {
-      "url": "/content-images/1784644264858-142.jpg",
+      "url": "/content-images/1784699750529-1784644264858-142.webp",
       "title": "R.E.P.O",
       "story": "",
       "tags": [
@@ -296,7 +296,7 @@
       ]
     },
     {
-      "url": "/content-images/1784651533471-153.jpg",
+      "url": "/content-images/1784699750672-1784651533471-153.webp",
       "title": "오류",
       "story": "",
       "tags": [
@@ -304,7 +304,7 @@
       ]
     },
     {
-      "url": "/content-images/1784651367738-160.jpg",
+      "url": "/content-images/1784699751113-1784651367738-160.webp",
       "title": "불청객",
       "story": "",
       "tags": [
@@ -313,7 +313,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653027324-164.jpg",
+      "url": "/content-images/1784699751684-1784653027324-164.webp",
       "title": "여름",
       "story": "",
       "tags": [
@@ -321,7 +321,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653051308-165.jpg",
+      "url": "/content-images/1784699751934-1784653051308-165.webp",
       "title": "마츠리",
       "story": "",
       "tags": [
@@ -329,7 +329,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653170235-444.jpg",
+      "url": "/content-images/1784699752344-1784653170235-444.webp",
       "title": "444-4444",
       "story": "",
       "tags": [
@@ -337,7 +337,7 @@
       ]
     },
     {
-      "url": "/content-images/1784653107140-167.jpg",
+      "url": "/content-images/1784699752783-1784653107140-167.webp",
       "title": "무제",
       "story": "",
       "tags": [
@@ -345,7 +345,7 @@
       ]
     },
     {
-      "url": "/content-images/1784644646951-166.jpg",
+      "url": "/content-images/1784699753355-1784644646951-166.webp",
       "title": "백룸",
       "story": "",
       "tags": [
@@ -363,7 +363,7 @@
         "텟쨩"
       ],
       "profileId": "c595ab65-a3ff-4150-891f-0fa1336f94c1",
-      "image": "/content-images/1784647328900-------.jpg"
+      "image": "/content-images/1784699756803-1784647328900-------.webp"
     },
     {
       "id": "entry-1",
@@ -390,7 +390,7 @@
         "마리"
       ],
       "profileId": "ab743cff-eeb2-4fea-bc2f-261bb033cf76",
-      "image": "/content-images/1784647328907-------.jpg"
+      "image": "/content-images/1784699756978-1784647328907-------.webp"
     },
     {
       "id": "a680837a-c364-4978-821f-36e33488ce33",
