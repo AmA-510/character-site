@@ -12,6 +12,11 @@ siteLinksSetting.className = 'site-links-setting'
 siteLinksSetting.innerHTML = '<h3>메인 링크 버튼</h3><p class="muted">메인 제목 아래에 표시할 정사각형 링크입니다. 버튼을 누르면 새 탭으로 열립니다.</p><button type="button" id="add-site-link">링크 버튼 추가</button><div id="site-links-list"></div>'
 document.querySelector('#hero').parentElement.append(siteLinksSetting)
 
+const noticeSetting = document.createElement('div')
+noticeSetting.className = 'notice-setting'
+noticeSetting.innerHTML = '<h3>슬라이드형 공지 / 추천</h3><label class="notice-toggle"><input id="notice-enabled" type="checkbox"> 대문과 링크 사이에 공지 영역 표시</label><p class="muted">여러 항목을 등록하면 약 5초마다 다음 공지로 자동 전환됩니다. 아래 점을 눌러 원하는 공지로 바로 이동할 수도 있습니다.</p><button type="button" id="add-notice">공지 추가</button><div id="notice-list"></div>'
+document.querySelector('#hero').parentElement.append(noticeSetting)
+
 const siteImageStyle = document.createElement('style')
 siteImageStyle.textContent = '.site-image-preview-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}.hero-image-item{width:110px}.site-image-preview-list img{display:block;width:110px;height:120px;object-fit:contain;background:#292834;border:1px solid #565260}.site-image-preview-list button{width:100%;margin:4px 0 0;padding:6px;background:#7b4654;color:#fff}'
 document.head.append(siteImageStyle)
@@ -19,6 +24,10 @@ document.head.append(siteImageStyle)
 const siteLinksStyle = document.createElement('style')
 siteLinksStyle.textContent = '.gallery-card-summary{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:6px 0;background:transparent;color:#d8d5c6;text-align:left}.gallery-card-summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gallery-card-summary b{color:#ea497e;font-size:13px;font-weight:400;white-space:nowrap}.gallery-order-controls{display:flex;gap:5px;margin-bottom:4px}.gallery-order-controls button{margin:0;padding:5px 9px;background:#292834;color:#d8d5c6;border:1px solid #565260}.gallery-card-collapsed{padding:10px 14px}.gallery-card-collapsed>:not(.gallery-card-summary):not(.gallery-order-controls){display:none}.entry-editor-card-hidden,.gallery-editor-card-hidden{display:none}.entry-editor-pager,.gallery-editor-pager{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}.entry-editor-pager button,.gallery-editor-pager button{margin:0;padding:7px 11px;background:#292834;color:#d8d5c6;border:1px solid #565260}.entry-editor-pager button.active,.gallery-editor-pager button.active{color:#ea497e;border-color:#ea497e}.site-links-setting{margin-top:26px}.site-link-card{display:grid;grid-template-columns:1fr 1.4fr 1fr 130px auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.site-link-card input{margin:0}.site-link-logo{display:flex;gap:6px;align-items:center;font-size:11px}.site-link-logo input{max-width:90px}.site-link-logo img{width:30px;height:30px;object-fit:contain;background:#22212a}.site-link-controls{display:flex;gap:4px}.site-link-controls button{margin:0;padding:7px 9px}.site-link-card .site-link-remove{background:#7b4654;color:#fff}@media(max-width:700px){.site-link-card{grid-template-columns:1fr}.site-link-controls{display:grid;grid-template-columns:1fr 1fr 1fr}.site-link-card .site-link-remove{width:100%}}'
 document.head.append(siteLinksStyle)
+
+const noticeStyle = document.createElement('style')
+noticeStyle.textContent = '.notice-setting{margin-top:26px}.notice-toggle{display:block;margin:10px 0}.notice-toggle input{width:auto;margin-right:8px}.notice-card{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:10px;align-items:start;margin:10px 0;padding:10px;border:1px solid #565260;background:#292834}.notice-card-preview{width:110px;height:88px;background:#22212a;border:1px solid #565260;display:grid;place-items:center;color:#aaa7a0;font-size:11px}.notice-card-preview img{width:100%;height:100%;object-fit:cover}.notice-card input,.notice-card textarea{margin:0}.notice-card textarea{min-height:70px}.notice-card-actions{display:flex;gap:4px}.notice-card-actions button{margin:0;padding:7px 9px}.notice-card-actions .danger{background:#7b4654;color:#fff}@media(max-width:700px){.notice-card{grid-template-columns:1fr}.notice-card-preview{width:100%;height:160px}.notice-card-actions{display:grid;grid-template-columns:1fr 1fr 1fr}}'
+document.head.append(noticeStyle)
 
 const escapeLinkText = (value = '') => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 let siteLinksDirty = false
@@ -160,6 +169,48 @@ document.addEventListener('click', async (event) => {
   }
 })
 
+let noticesDirty = false
+function collectNotices() {
+  if (!d) return
+  d.site.notices = [...document.querySelectorAll('[data-notice]')].map((card) => {
+    const index = Number(card.dataset.notice)
+    const previous = d.site.notices?.[index] || {}
+    return { id: card.dataset.noticeId || previous.id || crypto.randomUUID(), title: card.querySelector('[data-notice-key="title"]').value.trim(), text: card.querySelector('[data-notice-key="text"]').value.trim(), url: card.querySelector('[data-notice-key="url"]').value.trim(), image: previous.image || '' }
+  }).filter((notice) => notice.title || notice.text || notice.image || notice.url)
+  d.site.noticeEnabled = document.querySelector('#notice-enabled').checked
+}
+function renderNotices() {
+  if (!d) return
+  d.site.notices ||= []
+  document.querySelector('#notice-enabled').checked = d.site.noticeEnabled !== false
+  document.querySelector('#notice-list').innerHTML = d.site.notices.map((notice, index) => `<div class="notice-card" data-notice="${index}" data-notice-id="${notice.id || ''}"><div class="notice-card-preview">${notice.image ? `<img src="${notice.image}" alt="현재 공지 이미지">` : '이미지 없음'}</div><div><input data-notice-key="title" value="${escapeLinkText(notice.title || '')}" placeholder="공지 제목"><textarea data-notice-key="text" placeholder="짧은 설명 (선택)">${escapeLinkText(notice.text || '')}</textarea><input data-notice-key="url" value="${escapeLinkText(notice.url || '')}" placeholder="이동할 링크 또는 #/gallery 같은 내부 주소"><label>배너 이미지 (선택)<input class="notice-image-file" type="file" accept="image/*"></label></div><div class="notice-card-actions"><button type="button" data-move-notice="${index}" data-direction="-1" ${index === 0 ? 'disabled' : ''}>↑</button><button type="button" data-move-notice="${index}" data-direction="1" ${index === d.site.notices.length - 1 ? 'disabled' : ''}>↓</button><button type="button" class="danger" data-remove-notice="${index}">삭제</button></div></div>`).join('')
+}
+async function saveNoticeImages() {
+  for (const card of document.querySelectorAll('[data-notice]')) {
+    const file = card.querySelector('.notice-image-file')?.files[0]
+    if (!file) continue
+    const form = new FormData(); form.append('image', file)
+    const response = await fetch('/api/image', { method: 'POST', body: form })
+    const uploaded = await response.json()
+    if (!response.ok) throw new Error(uploaded.error || '공지 이미지를 업로드하지 못했습니다.')
+    const notice = d.site.notices.find((item) => item.id === card.dataset.noticeId)
+    if (notice) notice.image = uploaded.url
+  }
+}
+document.querySelector('#add-notice').addEventListener('click', () => { collectNotices(); d.site.notices.push({ id: crypto.randomUUID(), title: '', text: '', url: '', image: '' }); noticesDirty = true; renderNotices() })
+document.querySelector('#notice-list').addEventListener('input', () => { noticesDirty = true })
+document.querySelector('#notice-enabled').addEventListener('change', () => { noticesDirty = true })
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-remove-notice],[data-move-notice]')
+  if (!button) return
+  collectNotices()
+  const index = Number(button.dataset.removeNotice ?? button.dataset.moveNotice)
+  if (button.matches('[data-remove-notice]')) d.site.notices.splice(index, 1)
+  else { const next = index + Number(button.dataset.direction); if (next < 0 || next >= d.site.notices.length) return; [d.site.notices[index], d.site.notices[next]] = [d.site.notices[next], d.site.notices[index]] }
+  noticesDirty = true
+  renderNotices()
+})
+
 const originalSaveButton = [...document.querySelectorAll('button')].find((button) => button.textContent.includes('모든 변경사항'))
 originalSaveButton?.addEventListener('click', async (event) => {
   event.stopImmediatePropagation()
@@ -221,6 +272,12 @@ originalSaveButton?.addEventListener('click', async (event) => {
     await saveSiteLinkLogos()
   } else {
     d.site.links = savedLinks
+  }
+  try {
+    collectNotices()
+    await saveNoticeImages()
+  } catch (error) {
+    return say(error.message)
   }
   const response = await fetch('/api/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
   say(response.ok ? '저장됐습니다. 캐릭터사이트를 새로고침하세요.' : '저장에 실패했습니다.')
@@ -458,7 +515,7 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderGalleryPagination(); renderEntryExtras(); renderEntryPagination(); renderStories() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderNotices(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderGalleryPagination(); renderEntryExtras(); renderEntryPagination(); renderStories() }
 renderTrash()
 
 // Turn the long studio into focused work tabs and keep saving in reach.

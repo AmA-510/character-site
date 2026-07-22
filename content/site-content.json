@@ -58,6 +58,30 @@
         "description": "숄더픽",
         "logoImage": "/content-images/1784642789397----------.png"
       }
+    ],
+    "noticeEnabled": true,
+    "notices": [
+      {
+        "id": "83c2ba26-d30f-46cd-bf87-37ed760e6c02",
+        "title": "테스트",
+        "text": "10/24~10/25 제2회 코미버스 예정",
+        "url": "https://x.com/comiv_official",
+        "image": "/content-images/1784693286784-------5.png"
+      },
+      {
+        "id": "41bcd525-bd48-4031-8e67-9769f9e860fb",
+        "title": "테스트2",
+        "text": "돈까스 먹고싶음",
+        "url": "https://x.com/akirama1417491",
+        "image": "/content-images/1784693383382-------1.png"
+      },
+      {
+        "id": "77cb0a8f-4980-4331-bffa-5e76c068152f",
+        "title": "테스트3",
+        "text": "카드값 밀릴거같음\n5만원만 기부해주세요",
+        "url": "https://www.pixiv.net/users/107824468",
+        "image": "/content-images/1784693444186-136.jpg"
+      }
     ]
   },
   "profiles": [
