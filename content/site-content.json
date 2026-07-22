@@ -84,6 +84,93 @@
       }
     ]
   },
+  "sketches": [
+    {
+      "id": "660dabf6-0a24-4180-824c-ad9fad3a7c05",
+      "url": "/content-images/1784696799226-------------.jpg",
+      "date": "2026-07-08"
+    },
+    {
+      "id": "4712dabd-6c6d-4ce7-98cf-82eb5098cc45",
+      "url": "/content-images/1784696807647-------------2.jpg",
+      "date": "2026-07-08"
+    },
+    {
+      "id": "8b5a9404-aec4-4bfd-90c3-d9d55e547083",
+      "url": "/content-images/1784696835166-25.08.25.------.jpg",
+      "date": "2025-08-25"
+    },
+    {
+      "id": "829609a8-b8fd-44ca-b05c-e03c2919f7a5",
+      "url": "/content-images/1784696845864-25.10.17.jpg",
+      "date": "2025-10-17"
+    },
+    {
+      "id": "f7a88706-dbd0-4c80-95e8-9a51d0152171",
+      "url": "/content-images/1784696853353-25.10.19.------.jpg",
+      "date": "2025-10-19"
+    },
+    {
+      "id": "0ed26920-5a91-4de1-91cf-afc196419659",
+      "url": "/content-images/1784696863560-25.10.27.------.jpg",
+      "date": "2025-10-27"
+    },
+    {
+      "id": "84b9cfcb-c2c8-4e64-9682-4ac4ef063ba7",
+      "url": "/content-images/1784696875717-25.11.18.jpg",
+      "date": "2025-11-18"
+    },
+    {
+      "id": "714c15e8-e130-441a-b3d2-7ef66520419d",
+      "url": "/content-images/1784696885987-25.12.02.------.jpg",
+      "date": "2025-12-02"
+    },
+    {
+      "id": "a85d23e6-2a96-44ed-993a-bc1b5f487dae",
+      "url": "/content-images/1784696921499-------------.jpg",
+      "date": "2026-05-15"
+    },
+    {
+      "id": "ddb8edcc-2455-44f2-8c8b-f840848f9b1a",
+      "url": "/content-images/1784696933069----------------------------.jpg",
+      "date": "2026-04-01"
+    },
+    {
+      "id": "6725e8a0-247d-49ce-8d9c-e89082ac2bb8",
+      "url": "/content-images/1784696947731-154.jpg",
+      "date": "2026-05-09"
+    },
+    {
+      "id": "c261674d-3de5-4445-b1a0-6c4e511c7704",
+      "url": "/content-images/1784696960021-143.jpg",
+      "date": "2026-04-21"
+    },
+    {
+      "id": "479c65a2-d9f7-4ac5-8e0f-0e8bb1fbaaf2",
+      "url": "/content-images/1784696968565-144.jpg",
+      "date": "2026-04-22"
+    },
+    {
+      "id": "099f96ad-37f4-4901-afb9-037e6dd37ead",
+      "url": "/content-images/1784696977940-145.jpg",
+      "date": "2026-04-24"
+    },
+    {
+      "id": "ffb15264-2a7d-4800-91e4-981ed88bf482",
+      "url": "/content-images/1784696984444-146.jpg",
+      "date": "2026-04-24"
+    },
+    {
+      "id": "7ac118ec-3741-4b49-984a-eea89c1fe78b",
+      "url": "/content-images/1784696992146-147.jpg",
+      "date": "2026-04-25"
+    },
+    {
+      "id": "656527c2-dbec-42c1-a5e6-f9ac68dd1ed7",
+      "url": "/content-images/1784696999768-148.jpg",
+      "date": "2026-04-26"
+    }
+  ],
   "profiles": [
     {
       "id": "c595ab65-a3ff-4150-891f-0fa1336f94c1",

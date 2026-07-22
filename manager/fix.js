@@ -496,6 +496,29 @@ document.addEventListener('click', (event) => {
   renderEntryPagination()
 })
 
+const sketchesSection = document.createElement('section')
+sketchesSection.innerHTML = '<h2>낙서</h2><p class="muted">제목이나 설명 없이 이미지와 날짜만 기록합니다.</p><input id="sketch-file" type="file" accept="image/*"><label>날짜<input id="sketch-date" type="date"></label><button type="button" id="add-sketch">낙서 이미지 추가</button><div id="sketches-list"></div>'
+document.querySelector('.w').append(sketchesSection)
+document.querySelector('#sketch-date').value = new Date().toISOString().slice(0, 10)
+
+function renderSketches() {
+  if (!d) return
+  d.sketches ||= []
+  document.querySelector('#sketches-list').innerHTML = d.sketches.map((item, index) => `<div class="card" data-type="sketches" data-i="${index}">${item.url ? `<img src="${item.url}" alt="낙서">` : ''}<label>날짜<input data-k="date" type="date" value="${item.date || ''}"></label><button class="danger">삭제</button></div>`).join('')
+}
+document.querySelector('#add-sketch').addEventListener('click', async () => {
+  const file = document.querySelector('#sketch-file').files[0]
+  if (!file) return say('낙서 이미지를 선택해 주세요.')
+  const form = new FormData(); form.append('image', file)
+  const response = await fetch('/api/image', { method: 'POST', body: form })
+  const uploaded = await response.json()
+  if (!response.ok) return say(uploaded.error || '이미지 업로드에 실패했습니다.')
+  d.sketches ||= []
+  d.sketches.push({ id: crypto.randomUUID(), url: uploaded.url, date: document.querySelector('#sketch-date').value || new Date().toISOString().slice(0, 10) })
+  document.querySelector('#sketch-file').value = ''
+  draw()
+})
+
 const storiesSection = document.createElement('section')
 storiesSection.innerHTML = '<h2>이야기</h2><p class="muted">짧은 소설, 독백, 기록을 추가할 수 있습니다.</p><button type="button" id="add-story">이야기 추가</button><div id="stories-list"></div>'
 document.querySelector('.w').append(storiesSection)
@@ -515,7 +538,7 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderNotices(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderGalleryPagination(); renderEntryExtras(); renderEntryPagination(); renderStories() }
+draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderNotices(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderGalleryPagination(); renderEntryExtras(); renderEntryPagination(); renderSketches(); renderStories() }
 renderTrash()
 
 // Turn the long studio into focused work tabs and keep saving in reach.
@@ -529,6 +552,7 @@ const panels = [
   { label: '기본 정보', element: document.querySelector('#title').closest('section') },
   { label: '캐릭터', element: document.querySelector('#profiles').closest('section') },
   { label: '갤러리', element: document.querySelector('#gallery').closest('section') },
+  { label: '낙서', element: sketchesSection },
   { label: '세계관', element: document.querySelector('#entries').closest('section') },
   { label: '이야기', element: storiesSection },
   { label: '휴지통', element: trashSection },
