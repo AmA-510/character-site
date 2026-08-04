@@ -1,5 +1,18 @@
 // Reliable image saving and a lightweight image preview for the local editor.
 const nativeFetch = window.fetch.bind(window)
+
+// Keep newly uploaded illustrations at the front of the gallery. The base
+// editor appends them, so move only a successfully added item after upload.
+const baseGalleryUpload = upload
+upload = async function (type) {
+  const previousCount = d?.gallery?.length || 0
+  await baseGalleryUpload(type)
+  if (type === 'gallery' && d?.gallery?.length === previousCount + 1) {
+    d.gallery.unshift(d.gallery.pop())
+    draw()
+  }
+}
+
 async function makeWebImage(file, maxSize = 2200, quality = .9) {
   if (!file?.type?.startsWith('image/') || /svg|gif/.test(file.type)) return file
   const source = await createImageBitmap(file)
@@ -562,7 +575,7 @@ document.querySelector('#add-sketch').addEventListener('click', async () => {
   const uploaded = await response.json()
   if (!response.ok) return say(uploaded.error || '이미지 업로드에 실패했습니다.')
   d.sketches ||= []
-  d.sketches.push({ id: crypto.randomUUID(), url: uploaded.url, date: document.querySelector('#sketch-date').value || new Date().toISOString().slice(0, 10) })
+  d.sketches.unshift({ id: crypto.randomUUID(), url: uploaded.url, date: document.querySelector('#sketch-date').value || new Date().toISOString().slice(0, 10) })
   document.querySelector('#sketch-file').value = ''
   draw()
 })
