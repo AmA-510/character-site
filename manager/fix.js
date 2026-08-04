@@ -48,6 +48,11 @@ siteLinksSetting.className = 'site-links-setting'
 siteLinksSetting.innerHTML = '<h3>메인 링크 버튼</h3><p class="muted">메인 제목 아래에 표시할 정사각형 링크입니다. 버튼을 누르면 새 탭으로 열립니다.</p><button type="button" id="add-site-link">링크 버튼 추가</button><div id="site-links-list"></div>'
 document.querySelector('#hero').parentElement.append(siteLinksSetting)
 
+const linkNoteSetting = document.createElement('div')
+linkNoteSetting.className = 'link-note-setting'
+linkNoteSetting.innerHTML = '<label>링크 아래 글<textarea id="link-note" placeholder="링크 버튼 아래에 표시할 글을 입력하세요."></textarea></label><p class="muted">줄바꿈도 그대로 표시됩니다. 비워 두면 사이트에는 나타나지 않습니다.</p>'
+siteLinksSetting.append(linkNoteSetting)
+
 const noticeSetting = document.createElement('div')
 noticeSetting.className = 'notice-setting'
 noticeSetting.innerHTML = '<h3>슬라이드형 공지 / 추천</h3><label class="notice-toggle"><input id="notice-enabled" type="checkbox"> 대문과 링크 사이에 공지 영역 표시</label><p class="muted">여러 항목을 등록하면 약 5초마다 다음 공지로 자동 전환됩니다. 아래 점을 눌러 원하는 공지로 바로 이동할 수도 있습니다.</p><button type="button" id="add-notice">공지 추가</button><div id="notice-list"></div>'
@@ -147,6 +152,7 @@ for (const [inputId, previewId] of [['hero-image', 'hero-preview']]) {
 
 fetch('/api/content').then((response) => response.json()).then((content) => {
   document.querySelector('#title-lines').value = (content.site.titleLines || [content.site.title]).join('\n')
+  document.querySelector('#link-note').value = content.site.linkNote || ''
   renderHeroImages(content.site)
 })
 
@@ -356,6 +362,7 @@ originalSaveButton?.addEventListener('click', async (event) => {
   d.site.title = $('title').value
   d.site.titleLines = $('title-lines').value.split('\n').filter(Boolean)
   d.site.heroLines = $('hero').value.split('\n').filter(Boolean)
+  d.site.linkNote = document.querySelector('#link-note').value
   let savedLinks = d.site.links || []
   try {
     const latest = await fetch('/api/content')
