@@ -382,44 +382,6 @@ document.addEventListener('click', (event) => {
   }
 })
 
-// Soft delete: items stay in the local content file until they are restored.
-document.addEventListener('click', (event) => {
-  const button = event.target.closest('.danger')
-  if (!button) return
-  event.preventDefault()
-  event.stopImmediatePropagation()
-  const card = button.closest('.card')
-  const type = card.dataset.type
-  const index = Number(card.dataset.i)
-  d.trash ||= []
-  d.trash.push({ type, item: d[type][index], deletedAt: new Date().toISOString() })
-  d[type].splice(index, 1)
-  draw()
-  renderTrash()
-  say('휴지통으로 옮겼습니다. 저장하면 반영됩니다.')
-}, true)
-
-const trashSection = document.createElement('section')
-trashSection.innerHTML = '<h2>휴지통</h2><p class="muted">삭제한 항목을 다시 복구할 수 있습니다.</p><div id="trash-list"></div>'
-document.querySelector('.w').append(trashSection)
-
-function renderTrash() {
-  if (!d) return
-  const list = document.querySelector('#trash-list')
-  const items = d.trash || []
-  list.innerHTML = items.length ? items.map((entry, index) => `<div class="card"><b>${entry.type}</b> · ${entry.item.title || entry.item.name || '제목 없음'}<br><button data-restore="${index}">복구</button></div>`).join('') : '<p class="muted">휴지통이 비어 있습니다.</p>'
-}
-document.addEventListener('click', (event) => {
-  const button = event.target.closest('[data-restore]')
-  if (!button) return
-  const index = Number(button.dataset.restore)
-  const entry = d.trash[index]
-  d[entry.type].push(entry.item)
-  d.trash.splice(index, 1)
-  draw()
-  renderTrash()
-  say('복구했습니다. 저장하면 반영됩니다.')
-})
 const profileLogoStyle = document.createElement('style')
 profileLogoStyle.textContent = '.profile-logo-setting{clear:both;padding-top:10px}.profile-logo-setting img{display:block;float:none;width:150px;height:72px;object-fit:contain;object-position:left center;margin:6px 0;background:#292834;border:1px solid #565260}.profile-preview-setting{clear:both;display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:14px;padding-top:14px}.profile-preview-controls label{display:block;margin-top:7px}.profile-preview-controls input[type="range"]{max-width:250px;padding:0}.profile-preview-editor-frame{width:118px;height:118px;overflow:hidden;background:#292834;border:1px solid #565260}.profile-preview-editor-image{display:block;width:100%;height:100%;object-fit:cover}@media(max-width:520px){.profile-preview-setting{grid-template-columns:1fr}.profile-preview-editor-frame{width:118px;height:118px}}'
 document.head.append(profileLogoStyle)
@@ -624,12 +586,9 @@ document.querySelector('#add-story').addEventListener('click', () => {
 })
 
 const originalDraw = draw
-draw = function () { originalDraw(); renderTrash(); renderHeroImages(); renderSiteLinks(); renderNotices(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderGalleryPagination(); renderEntryExtras(); renderEntryPagination(); renderSketches(); renderStories() }
-renderTrash()
+draw = function () { originalDraw(); renderHeroImages(); renderSiteLinks(); renderNotices(); renderProfileLogoInputs(); renderProfilePreviewInputs(); renderGalleryTagInputs(); renderGalleryCardCollapses(); renderGalleryPagination(); renderEntryExtras(); renderEntryPagination(); renderSketches(); renderStories() }
 
 // Turn the long studio into focused work tabs and keep saving in reach.
-storiesSection.after(trashSection)
-
 const studioStyle = document.createElement('style')
 studioStyle.textContent = '.studio-tabs{position:sticky;top:0;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:12px 0;background:#22212a;border-bottom:1px solid #565260}.studio-tab{flex:0 0 auto;margin:0;padding:8px 11px;background:transparent;color:#aaa7a0;border:1px solid transparent;font-size:13px}.studio-tab.active{color:#ea497e;border-color:#ea497e;background:#292834}.studio-panel-hidden{display:none}.studio-save-bar{position:fixed;z-index:30;left:50%;bottom:18px;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);padding:9px 12px;background:#292834;border:1px solid #565260;box-shadow:0 12px 30px rgba(0,0,0,.32);transform:translateX(-50%)}.studio-save-bar button{margin:0}.studio-save-bar span{font-size:12px}@media(max-width:600px){.studio-save-bar{bottom:12px;width:calc(100% - 28px);justify-content:space-between}.studio-save-bar button{font-size:13px}}'
 document.head.append(studioStyle)
@@ -641,7 +600,6 @@ const panels = [
   { label: '낙서', element: sketchesSection },
   { label: '세계관', element: document.querySelector('#entries').closest('section') },
   { label: '이야기', element: storiesSection },
-  { label: '휴지통', element: trashSection },
 ]
 
 const studioTabs = document.createElement('nav')
