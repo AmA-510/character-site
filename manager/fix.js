@@ -282,9 +282,20 @@ document.querySelector('#optimize-existing-images').addEventListener('click', as
 })
 
 const originalSaveButton = [...document.querySelectorAll('button')].find((button) => button.textContent.includes('모든 변경사항'))
+// The base editor already has an inline save handler.  Keep this enhanced
+// handler as the only save path so one click cannot write two different
+// versions of the content file at once.
+originalSaveButton?.removeAttribute('onclick')
+let isSavingContent = false
 originalSaveButton?.addEventListener('click', async (event) => {
   event.stopImmediatePropagation()
   event.preventDefault()
+  if (isSavingContent) return
+  isSavingContent = true
+  originalSaveButton.disabled = true
+  const previousButtonText = originalSaveButton.textContent
+  originalSaveButton.textContent = '저장 중…'
+  try {
   const cards = [...document.querySelectorAll('.card')]
   for (const card of cards) {
     const item = d[card.dataset.type][card.dataset.i]
@@ -352,6 +363,11 @@ originalSaveButton?.addEventListener('click', async (event) => {
   const response = await fetch('/api/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
   say(response.ok ? '저장됐습니다. 캐릭터사이트를 새로고침하세요.' : '저장에 실패했습니다.')
   if (response.ok) { siteLinksDirty = false; draw() }
+  } finally {
+    isSavingContent = false
+    originalSaveButton.disabled = false
+    originalSaveButton.textContent = previousButtonText
+  }
 }, true)
 
 const overlay = document.createElement('div')
