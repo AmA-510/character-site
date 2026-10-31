@@ -35,7 +35,14 @@
         "label": "Pixiv",
         "url": "https://www.pixiv.net/users/107824468",
         "description": "",
-        "logoImage": "/content-images/1784642134387----------.png"
+        "logoImage": "/content-images/1793466944572-vlrtlqm2.webp"
+      },
+      {
+        "id": "2f08d610-c059-4b12-bc1b-dd518894cbea",
+        "label": "포스타입",
+        "url": "https://www.postype.com/@ama510",
+        "description": "포스타입",
+        "logoImage": "/content-images/1793466824610-------------.webp"
       },
       {
         "id": "473bcc11-7b6e-4302-89dc-ee7a57fe8d91",
@@ -45,18 +52,25 @@
         "logoImage": "/content-images/1784642518621----------.png"
       },
       {
-        "id": "3e5b06f1-5797-40e2-9323-d0e0e4e5a32b",
-        "label": "커미션",
-        "url": "https://discord.gg/rZj2P9CdCd",
-        "description": "디스코드",
-        "logoImage": "/content-images/1784642740431----------.png"
-      },
-      {
         "id": "fe0af31d-9515-420a-97a5-fafbff3fd777",
         "label": "숄더픽",
         "url": "https://pick.shoulder.fan/@a971cebc-736b-4b11-a334-4418bceec2e0",
         "description": "숄더픽",
         "logoImage": "/content-images/1784642789397----------.png"
+      },
+      {
+        "id": "91dafba2-5589-4464-bef7-8788551f160a",
+        "label": "치지직",
+        "url": "https://chzzk.naver.com/1532a2c6f13e015f4f5108db07df9494",
+        "description": "치지직",
+        "logoImage": "/content-images/1793467516972----------.webp"
+      },
+      {
+        "id": "56616a99-6579-4b04-a174-d1ebe90b9fd0",
+        "label": "Vgen",
+        "url": "https://vgen.co/AmA510",
+        "description": "브이젠",
+        "logoImage": "/content-images/1793466653562-vgen.webp"
       }
     ],
     "noticeEnabled": true,
@@ -67,11 +81,30 @@
         "text": "1차창작 투고 매거진 코미포스트입니다.",
         "url": "https://comipost.kr/",
         "image": "/content-images/1790434425724-1790434414384-2.webp"
+      },
+      {
+        "id": "696be28f-540d-47b1-b3c0-a3df85bcb24f",
+        "title": "Vgen 커미션을 오픈했습니다",
+        "text": "Vgen",
+        "url": "https://vgen.co/AmA510",
+        "image": "/content-images/1793467093869----------2.webp"
+      },
+      {
+        "id": "24599efe-aefb-4083-b3cc-7aab80448eab",
+        "title": "COMITIA158",
+        "text": "코미티아158에 【N21a】,【N21b】로 참가합니다.",
+        "url": "https://x.com/akirama1417491/status/2113592102596854049",
+        "image": "/content-images/1793467362222-------------.webp"
       }
     ],
     "linkNote": "Email | akirama5100@gmail.com"
   },
   "sketches": [
+    {
+      "id": "3f2726e2-b788-45fb-86f0-a39dc2decf1a",
+      "url": "/content-images/1793467698668-0.------.webp",
+      "date": "2026-10-31"
+    },
     {
       "id": "660dabf6-0a24-4180-824c-ad9fad3a7c05",
       "url": "/content-images/1790434421835-1786872298856-1784699753412-1784696799226-------------.webp",
@@ -185,6 +218,20 @@
     }
   ],
   "gallery": [
+    {
+      "url": "/content-images/1793467614607-6.webp",
+      "title": "마리-에트나",
+      "story": "마계전기 디스가이아 시리즈 에트나의 코스튬입니다.",
+      "tags": []
+    },
+    {
+      "url": "/content-images/1793467580411-18.webp",
+      "title": "할로윈 마리",
+      "story": "\"할로윈 파티에 코스프레가 아닌 무언가가 숨어있대.\"\n\n\"그러니까, 모르는 사람이 주는 사탕은 받아먹지 마.\"",
+      "tags": [
+        "마리"
+      ]
+    },
     {
       "url": "/content-images/1790434662756-7.webp",
       "title": "마법소녀2",
