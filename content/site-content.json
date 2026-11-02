@@ -71,6 +71,13 @@
         "url": "https://vgen.co/AmA510",
         "description": "브이젠",
         "logoImage": "/content-images/1793466653562-vgen.webp"
+      },
+      {
+        "id": "02447a8b-355a-47ae-bf65-041e5a075393",
+        "label": "artmug",
+        "url": "https://artmug.kr/index.php?channel=list&field=brand&search=aml5dW4yMjM5",
+        "description": "아트머그",
+        "logoImage": "/content-images/1793594303522-artmug.webp"
       }
     ],
     "noticeEnabled": true,
